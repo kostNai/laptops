@@ -1,21 +1,34 @@
-import Link from "next/link";
+import Link from 'next/link'
+import { RiMenuFill } from 'react-icons/ri'
+import Navbar from '../navBar/NavBar'
 
+const links = [
+	{ title: 'Home', path: '/' },
+	{ title: 'About', path: '/about' },
+	{ title: 'Catalog', path: '/catalog' },
+	{ title: 'Contacts', path: '/contacts' },
+	{ title: 'Login', path: '/login' },
+	{ title: 'Register', path: '/register' }
+]
 export default function Header() {
-  return (
-   <header className='mt8 mx-32 flex justify-between items-center py-8 px-4 bg-gray-600 text-white rounded-b-xl'>
-    <div>
-        <Link href={'/'}>Laptops by Sanya</Link>
-    </div>
-    <nav className="flex gap-16">
-        <Link href={'/'} className='hover:text-red-400 transition duration-300'>Home</Link>
-        <Link href={'/about'} className='hover:text-red-400 transition duration-300'>About</Link>
-        <Link href={'/catalog'} className='hover:text-red-400 transition duration-300'>Catalog</Link>
-        <Link href={'/contacts'}className='hover:text-red-400 transition duration-300' >Contacts</Link>
-    </nav>
-    <div className="flex gap-8">
-        <Link href={'/login'} className='hover:text-red-400 transition duration-300'>Login</Link>
-        <Link href={'/register'}className='hover:text-red-400 transition duration-300'>Register</Link>
-    </div>
-   </header>
-  )
+	return (
+		<header className="mt8 mx-32 flex justify-between items-center py-8 px-4 bg-gray-600 text-white rounded-b-xl">
+			<div className="shrink">
+				<Link href={'/'}>Laptops by Sanya</Link>
+			</div>
+
+			<div className="flex gap-16 justify-between grow max-xl:hidden">
+				{links.map((link) => (
+					<Navbar link={link} />
+				))}
+			</div>
+
+			<div className="absolute top-16 right-0 flex gap-4 flex-col xl:hidden">
+				{links.map((link) => (
+					<Navbar link={link} />
+				))}
+			</div>
+			<RiMenuFill className="xl:hidden " size={32} />
+		</header>
+	)
 }
