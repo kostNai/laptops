@@ -9,7 +9,7 @@ export default function Navbar({ link }: Props) {
 		<Link
 			href={link.path}
 			key={link.title}
-			className="hover:text-red-400 transition duration-300 "
+			className="hover:text-white transition duration-300 "
 		>
 			{link.title}
 		</Link>

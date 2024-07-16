@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-
-body{
-    @apply bg-red-950;
+body {
+	@apply bg-body-bg px-32 max-xl:px-8 max-sm:px-0;
 }

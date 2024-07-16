@@ -1,34 +1,64 @@
+'use client'
+
 import Link from 'next/link'
 import { RiMenuFill } from 'react-icons/ri'
+import { MdClose } from 'react-icons/md'
 import Navbar from '../navBar/NavBar'
+import { useState } from 'react'
 
 const links = [
 	{ title: 'Home', path: '/' },
 	{ title: 'About', path: '/about' },
 	{ title: 'Catalog', path: '/catalog' },
-	{ title: 'Contacts', path: '/contacts' },
-	{ title: 'Login', path: '/login' },
-	{ title: 'Register', path: '/register' }
+	{ title: 'Contacts', path: '/contacts' }
 ]
 export default function Header() {
+	const [isMenuOpen, setIsMenuOpen] = useState(false)
+
 	return (
-		<header className="mt8 mx-32 flex justify-between items-center py-8 px-4 bg-gray-600 text-white rounded-b-xl">
-			<div className="shrink">
+		<header className="  flex justify-between items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl shrink">
+			<div>
 				<Link href={'/'}>Laptops by Sanya</Link>
 			</div>
 
-			<div className="flex gap-16 justify-between grow max-xl:hidden">
+			<div className="flex gap-16 justify-between  max-xl:hidden">
 				{links.map((link) => (
 					<Navbar link={link} />
 				))}
+			</div>
+			<div className="flex gap-4 max-xl:hidden ">
+				<Link href="/login" className="hover:text-white ">
+					Login
+				</Link>
+				<Link href="register" className="hover:text-white ">
+					Register
+				</Link>
 			</div>
 
-			<div className="absolute top-16 right-0 flex gap-4 flex-col xl:hidden">
-				{links.map((link) => (
-					<Navbar link={link} />
-				))}
-			</div>
-			<RiMenuFill className="xl:hidden " size={32} />
+			{isMenuOpen && (
+				<div className="absolute px-10 py-6 top-[calc(5rem)] right-32 flex  gap-4 flex-col justify-center xl:hidden h-fit bg-white text-text-dark rounded-xl">
+					{links.map((link) => (
+						<Navbar link={link} />
+					))}
+					<div className="flex flex-col gap-4 xl:hidden">
+						<Link href="/login">Login</Link>
+						<Link href="register">Register</Link>
+					</div>
+				</div>
+			)}
+			{!isMenuOpen ? (
+				<RiMenuFill
+					className="xl:hidden cursor-pointer text-gray-400 hover:text-white transition duration-300"
+					size={32}
+					onClick={() => setIsMenuOpen(true)}
+				/>
+			) : (
+				<MdClose
+					className="xl:hidden cursor-pointer text-gray-400 hover:text-white transition duration-300"
+					size={32}
+					onClick={() => setIsMenuOpen(false)}
+				/>
+			)}
 		</header>
 	)
 }
