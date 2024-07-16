@@ -16,14 +16,14 @@ export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	return (
-		<header className="  flex justify-between items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl shrink">
+		<header className="flex justify-between items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl shrink">
 			<div>
 				<Link href={'/'}>Laptops by Sanya</Link>
 			</div>
 
 			<div className="flex gap-16 justify-between  max-xl:hidden">
 				{links.map((link) => (
-					<Navbar link={link} />
+					<Navbar link={link} key={link.title}/>
 				))}
 			</div>
 			<div className="flex gap-4 max-xl:hidden ">
@@ -38,7 +38,7 @@ export default function Header() {
 			{isMenuOpen && (
 				<div className="absolute px-10 py-6 top-[calc(5rem)] right-32 flex  gap-4 flex-col justify-center xl:hidden h-fit bg-white text-text-dark rounded-xl">
 					{links.map((link) => (
-						<Navbar link={link} />
+						<Navbar link={link} key={link.title}/>
 					))}
 					<div className="flex flex-col gap-4 xl:hidden">
 						<Link href="/login">Login</Link>
