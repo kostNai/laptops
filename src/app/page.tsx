@@ -3,7 +3,7 @@ import Link from 'next/link'
 
 export default function Home() {
 	return (
-		<section className="mt-8 flex gap-8 h-2/3 max-lg:flex-col">
+		<section className="mt-8 flex gap-8 h-2/3 max-lg:flex-col max-lg:h-screen max-lg:gap-2">
 			<div className="flex-1 flex flex-col gap-8 pt-16">
 				<h1 className="text-5xl font-bold">
 					Потрібні якісні та недорогі ноутбуки з США? Ти там де треба!
@@ -29,7 +29,7 @@ export default function Home() {
 					</Link>
 				</div>
 			</div>
-			<div className="relative flex-1 p-16">
+			<div className="relative flex-1 px-32 py-16 max-xl:p-0 max-lg:w-full max-lg:h-1/2 max-md:hidden">
 				<div className="relative object-cover h-full">
 					<Image src="/title-img.png" alt="" fill />
 				</div>

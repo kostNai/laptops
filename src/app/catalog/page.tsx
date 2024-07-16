@@ -1,6 +1,9 @@
+import ProductList from '@/components/productList/ProductList'
 
 export default function CatalogPage() {
-  return (
-    <div>Catalog page</div>
-  )
+	return (
+		<div>
+			<ProductList />
+		</div>
+	)
 }

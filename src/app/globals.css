@@ -3,5 +3,5 @@
 @tailwind utilities;
 
 body {
-	@apply bg-body-bg px-32 max-xl:px-8 max-sm:px-0;
+	@apply bg-body-bg px-32 max-2xl:px-8 max-sm:px-0;
 }

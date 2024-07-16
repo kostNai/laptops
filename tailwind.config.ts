@@ -16,7 +16,10 @@ const config: Config = {
 			colors: {
 				'body-bg': '#eeeeee',
 				'header-bg': '#001E28',
-				'text-dark': '#1B3841'
+				'text-dark': '#1B3841',
+				'bg-btn': '#ffce00',
+				'bg-btn-hover': '#F94E4E',
+				'link-hover-color': '#8177FF'
 			}
 		}
 	},
