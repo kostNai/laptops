@@ -16,7 +16,7 @@ export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	return (
-		<header className="flex justify-between items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl shrink">
+		<header className="flex justify-between items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl shrink max-sm:rounded-none">
 			<div>
 				<Link href={'/'}>Laptops by Sanya</Link>
 			</div>
@@ -36,19 +36,19 @@ export default function Header() {
 			</div>
 
 			{isMenuOpen && (
-				<div className="absolute px-10 py-6 top-[calc(5rem)] right-32 flex  gap-4 flex-col justify-center xl:hidden h-fit bg-white text-text-dark rounded-xl">
+				<div className="absolute px-10 py-6 top-[calc(5rem)] right-16 flex  gap-4 flex-col items-start justify-center xl:hidden h-fit bg-white text-text-dark rounded-xl">
 					{links.map((link) => (
 						<Navbar link={link} key={link.title}/>
 					))}
 					<div className="flex flex-col gap-4 xl:hidden">
-						<Link href="/login">Login</Link>
-						<Link href="register">Register</Link>
+						<Link href="/login" className='max-xl:hover:bg-header-bg max-xl:hover:text-white'>Login</Link>
+						<Link href="register" className='max-xl:hover:bg-header-bg max-xl:hover:text-white'>Register</Link>
 					</div>
 				</div>
 			)}
 			{!isMenuOpen ? (
 				<RiMenuFill
-					className="xl:hidden cursor-pointer text-gray-400 hover:text-white transition duration-300"
+					className="xl:hidden cursor-pointer text-gray-400 hover:text-white transition duration-300 "
 					size={32}
 					onClick={() => setIsMenuOpen(true)}
 				/>

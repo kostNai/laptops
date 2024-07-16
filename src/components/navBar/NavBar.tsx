@@ -12,7 +12,9 @@ export default function Navbar({ link }: Props) {
 		<Link
 			href={link.path}
 			key={link.title}
-			className={pathName===link.path?" transition duration-300 bg-white text-text-dark px-2 rounded-lg":"hover:text-white transition duration-300 "}
+			className={pathName===link.path
+				?" transition duration-300 bg-white text-text-dark px-2 rounded-lg text-center"
+				:" max-xl:hover:bg-header-bg max-xl:hover:text-white hover:text-white text-center transition duration-300 "}
 		>
 			{link.title}
 		</Link>
