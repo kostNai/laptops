@@ -1,5 +1,14 @@
 import Image from 'next/image'
 
 export default function Home() {
-	return <div></div>
+	return (
+		<section>
+			<div>
+				<h1>Title</h1>
+			</div>
+			<div>
+				<Image src='' alt=''/>
+			</div>
+		</section>
+	)
 }
