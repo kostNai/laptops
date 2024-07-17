@@ -1,9 +1,9 @@
-import ProductList from '@/components/productList/ProductList'
+import ProductCategoryList from '@/components/productCategoryList/ProductCategoryList'
 
 export default function CatalogPage() {
 	return (
 		<div>
-			<ProductList />
+			<ProductCategoryList />
 		</div>
 	)
 }

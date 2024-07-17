@@ -30,6 +30,7 @@ export default function ProductCard({ product }: Props) {
 						src="/test-card-image.png"
 						alt=""
 						fill
+						sizes='"(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"'
 						className="hover:cursor-pointer"
 					/>
 				</div>

@@ -1,6 +1,5 @@
 import { ProductType } from '@/types/ProductType'
-import React from 'react'
-import ProductCard from '../productCard/ProductCard'
+import ProductCategoryCard from '../productCategoryCard/ProductCategoryCard'
 
 const products: ProductType[] = [
 	{
@@ -25,11 +24,11 @@ const products: ProductType[] = [
 	}
 ]
 
-export default function ProductList() {
+export default function ProductCategoryList() {
 	return (
-		<div className="my-16 flex flex-wrap  justify-between gap-8 max-xl:justify-center">
-			{products.map((product, indx) => (
-				<ProductCard product={product} key={indx} />
+		<div>
+			{products.map((product) => (
+				<ProductCategoryCard product={product} key={product.title} />
 			))}
 		</div>
 	)

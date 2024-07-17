@@ -19,7 +19,7 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<div className="flex flex-col justify-between h-[calc(100vh)]">
+				<div className="flex flex-col justify-between h-screen">
 					<Header />
 					<div className="grow">{children}</div>
 					<Footer />
