@@ -1,0 +1,4 @@
+{
+    "prettier.printWidth": 40,
+    "reactSnippets.settings.prettierEnabled": true
+}

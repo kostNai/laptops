@@ -16,7 +16,7 @@ export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	return (
-		<header className="flex justify-between items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl shrink max-sm:rounded-none">
+		<header className="flex justify-between items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl flex-1 max-sm:rounded-none">
 			<div>
 				<Link href={'/'}>Laptops by Sanya</Link>
 			</div>

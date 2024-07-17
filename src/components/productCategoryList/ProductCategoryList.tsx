@@ -26,7 +26,7 @@ const products: ProductType[] = [
 
 export default function ProductCategoryList() {
 	return (
-		<div>
+		<div className='mt-16 flex flex-wrap gap-4 justify-between'>
 			{products.map((product) => (
 				<ProductCategoryCard product={product} key={product.title} />
 			))}

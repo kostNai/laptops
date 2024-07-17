@@ -21,7 +21,7 @@ export default function RootLayout({
 			<body className={inter.className}>
 				<div className="flex flex-col justify-between h-screen">
 					<Header />
-					<div className="grow">{children}</div>
+					<div >{children}</div>
 					<Footer />
 				</div>
 			</body>
