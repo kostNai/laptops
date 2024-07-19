@@ -16,7 +16,7 @@ export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
 
 	return (
-		<header className="flex justify-between items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl flex-1 max-sm:rounded-none">
+		<header className="flex justify-between shrink grow-0 items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl flex-1 max-sm:rounded-none">
 			<div>
 				<Link href={'/'}>Laptops by Sanya</Link>
 			</div>
@@ -41,8 +41,8 @@ export default function Header() {
 						<Navbar link={link} key={link.title}/>
 					))}
 					<div className="flex flex-col gap-4 xl:hidden">
-						<Link href="/login" className='max-xl:hover:bg-header-bg max-xl:hover:text-white'>Login</Link>
-						<Link href="register" className='max-xl:hover:bg-header-bg max-xl:hover:text-white'>Register</Link>
+						<Link href="/login" className='max-xl:hover:bg-header-bg max-xl:hover:text-white max-xl:px-2'>Login</Link>
+						<Link href="register" className='max-xl:hover:bg-header-bg max-xl:hover:text-white max-xl:px-2'>Register</Link>
 					</div>
 				</div>
 			)}

@@ -29,8 +29,8 @@ export default function Home() {
 					</Link>
 				</div>
 			</div>
-			<div className="relative flex-1 px-32 py-16 max-xl:p-0 max-lg:w-full max-lg:h-1/2 max-md:hidden">
-				<div className="relative object-cover h-full">
+			<div className="relative flex-1 flex justify-center px-32 py-16 max-xl:p-0  max-lg:h-1/2 max-md:hidden">
+				<div className="relative object-contain max-lg:w-2/3 h-full">
 					<Image src="/title-img.png" alt="" fill />
 				</div>
 			</div>
