@@ -6,6 +6,7 @@ import { RamType } from './RamType'
 
 export type ProductType = {
 	id?: number
+	price: number
 	name: string
 	model: string
 	color: number

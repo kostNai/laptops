@@ -12,19 +12,17 @@ export default async function ProductCategoryList() {
 	console.log(products)
 	return (
 		<div className="mt-16 flex flex-wrap gap-4 justify-between">
-			{products &&
-				products.map((product) => (
-					<Suspense
-						fallback={
-							<div>Loading...</div>
-						}
-					>
+			<Suspense
+				fallback={<div>Loading...</div>}
+			>
+				{products &&
+					products.map((product) => (
 						<ProductCategoryCard
 							product={product}
 							key={product.id}
 						/>
-					</Suspense>
-				))}
+					))}
+			</Suspense>
 		</div>
 	)
 }
