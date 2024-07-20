@@ -1,5 +1,6 @@
 import Filters from '@/components/filters/Filters'
 import ProductCategoryList from '@/components/productCategoryList/ProductCategoryList'
+import { Suspense } from 'react'
 
 export default function CatalogPage() {
 	return (
@@ -10,12 +11,20 @@ export default function CatalogPage() {
 				</h2>
 			</div>
 			<div className="grid grid-cols-4">
-				<div className="col-span-1">
+				<div className="col-span-1 mt-16">
 					<Filters />
 				</div>
 				<div className="col-span-3">
 					<div>
-						<ProductCategoryList />
+						<Suspense
+							fallback={
+								<div>
+									Suspense loading...
+								</div>
+							}
+						>
+							<ProductCategoryList />
+						</Suspense>
 					</div>
 				</div>
 			</div>

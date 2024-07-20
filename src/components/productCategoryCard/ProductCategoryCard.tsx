@@ -4,6 +4,7 @@ import { ProductType } from '@/types/ProductType'
 import Image from 'next/image'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { Suspense } from 'react'
 
 type Props = {
 	product: ProductType
@@ -14,7 +15,7 @@ export default function ProductCategoryCard({
 }: Props) {
 	const pathName = usePathname()
 	return (
-		<div className="flex flex-col items-center justify-between w-[250px] h-fit gap-4 p-4 bg-white border-solid border-gray-300 border-[calc(1px)] rounded-xl hover:shadow-md hover:shadow-current hover:scale-[1.02] transition duration-300">
+		<div className="flex flex-col items-center justify-between w-[250px] h-max gap-4 p-4 bg-white border-solid border-gray-300 border-[calc(1px)] rounded-xl hover:shadow-md hover:shadow-current hover:scale-[1.02] transition duration-300">
 			<div className="cursor-pointer">
 				<Image
 					src="/test-card-image.png"

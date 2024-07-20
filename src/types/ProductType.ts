@@ -11,7 +11,7 @@ export type ProductType = {
 	image: string
 	name: string
 	model: string
-	color: number
+	color: string
 	weight: number
 	multimedia: string
 	dimensions: string

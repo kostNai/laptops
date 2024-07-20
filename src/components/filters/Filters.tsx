@@ -4,38 +4,70 @@ import {
 } from '@/lib/getData'
 import { CpuType } from '@/types/CpuType'
 import { ProductType } from '@/types/ProductType'
+import Filter from './Filter.tsx/Filter'
 
 export default async function Filters() {
 	const products: ProductType[] =
 		await getProducts()
+
 	return (
-		products && (
+		<div>
+			<h2 className="text-2xl font-bold">
+				Фільтри:
+			</h2>
 			<div>
-				<div>
-					<h3>Виробник</h3>
-					<div className="flex flex-col">
-						{products.map(
-							(
-								product: ProductType
-							) => (
-								<label
-									htmlFor="cpu"
-									key={product.id}
-									className="flex gap-2"
-								>
-									<div>
-										<input
-											type="checkbox"
-											name="cpu"
-										/>
-									</div>
-									{product.manufacturer}
-								</label>
-							)
-						)}
-					</div>
-				</div>
+				<Filter
+					products={products}
+					options={products.map(
+						(product) =>
+							product.manufacturer
+					)}
+					name="manufacturer"
+					title="Виробник"
+				/>
 			</div>
-		)
+			<div>
+				<Filter
+					products={products}
+					options={products.map(
+						(product) => product.model
+					)}
+					name="model"
+					title="Модель"
+				/>
+			</div>
+			<div>
+				<Filter
+					products={products}
+					options={products.map(
+						(product) => product.color
+					)}
+					name="model"
+					title="Колір"
+				/>
+			</div>
+			<div>
+				<Filter
+					products={products}
+					options={products.map(
+						(product) =>
+							product.dimensions
+					)}
+					name="model"
+					title="Розмір"
+				/>
+			</div>
+			<div>
+				<Filter
+					products={products}
+					options={products.map(
+						(product) =>
+							product.cpu!.manufacturer
+					)}
+					name="model"
+					title="Виробник процесора"
+				/>
+			</div>
+		</div>
 	)
 }
