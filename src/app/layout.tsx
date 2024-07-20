@@ -22,11 +22,9 @@ export default function RootLayout({
 	return (
 		<html lang="en">
 			<body className={inter.className}>
-				<div className="flex flex-col justify-between h-screen">
+				<div className="flex flex-col justify-between h-full">
 					<Header />
-					<div className="grow">
-						{children}
-					</div>
+					<div>{children}</div>
 					<Footer />
 				</div>
 			</body>

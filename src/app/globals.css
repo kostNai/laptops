@@ -2,6 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+html,
+body {
+	@apply h-screen;
+}
 body {
 	@apply bg-body-bg px-32 max-2xl:px-8 max-sm:px-0;
+}
+
+th,
+td {
+	@apply text-start py-[4px];
+}
+th {
+	@apply font-normal opacity-50;
+}
+td {
+	@apply pl-14;
 }

@@ -1,4 +1,5 @@
 export type CpuType = {
+	id?: string
 	manufacturer: string
 	series: string
 	model: string

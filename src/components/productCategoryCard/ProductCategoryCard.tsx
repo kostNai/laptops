@@ -14,13 +14,13 @@ export default function ProductCategoryCard({
 }: Props) {
 	const pathName = usePathname()
 	return (
-		<div className="flex flex-col items-center justify-between w-[250px] h-fit gap-4 p-4 bg-white border-solid border-gray-300 border-[calc(1px)] rounded-xl hover:shadow-md hover:shadow-current transition duration-300">
-			<div className="">
+		<div className="flex flex-col items-center justify-between w-[250px] h-fit gap-4 p-4 bg-white border-solid border-gray-300 border-[calc(1px)] rounded-xl hover:shadow-md hover:shadow-current hover:scale-[1.02] transition duration-300">
+			<div className="cursor-pointer">
 				<Image
 					src="/test-card-image.png"
 					alt=""
-					width={100}
-					height={50}
+					width={150}
+					height={75}
 				/>
 			</div>
 			<div className="flex flex-col items-start mt-8  w-full">

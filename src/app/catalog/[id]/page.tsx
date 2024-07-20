@@ -1,15 +1,25 @@
 import SingleProduct from '@/components/singleProduct/SingleProduct'
+import { getProduct } from '@/lib/getData'
+import { ProductType } from '@/types/ProductType'
 import React from 'react'
 
-export default function Page({
+export default async function Page({
 	params
 }: {
 	params: { id: string }
 }) {
-	console.log(params.id)
+	const product: ProductType =
+		await getProduct(params.id).then(
+			(data) => {
+				return data.data.product
+			}
+		)
+
 	return (
 		<div className="w-full h-full bg-white">
-			<SingleProduct />
+			<SingleProduct
+				product={product}
+			/>
 		</div>
 	)
 }

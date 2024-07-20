@@ -5,13 +5,9 @@ import { Suspense } from 'react'
 
 export default async function ProductCategoryList() {
 	const products: ProductType[] =
-		await getProducts().then((data) => {
-			console.log(data.data)
-			return data.data.products
-		})
-	console.log(products)
+		await getProducts()
 	return (
-		<div className="mt-16 flex flex-wrap gap-4 justify-between">
+		<div className="mt-16 flex flex-wrap gap-4 justify-stretch">
 			<Suspense
 				fallback={<div>Loading...</div>}
 			>
