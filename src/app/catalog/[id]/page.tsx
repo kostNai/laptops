@@ -1,5 +1,5 @@
 import SingleProduct from '@/components/singleProduct/SingleProduct'
-import { getProduct } from '@/lib/getData'
+import { getProduct } from '@/lib/data'
 import { ProductType } from '@/types/ProductType'
 import React from 'react'
 

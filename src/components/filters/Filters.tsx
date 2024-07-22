@@ -1,8 +1,4 @@
-import {
-	getCpuList,
-	getProducts
-} from '@/lib/getData'
-import { CpuType } from '@/types/CpuType'
+import { getProducts } from '@/lib/data'
 import { ProductType } from '@/types/ProductType'
 import Filter from './Filter.tsx/Filter'
 

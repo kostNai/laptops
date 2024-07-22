@@ -1,6 +1,6 @@
 import { ProductType } from '@/types/ProductType'
 import ProductCategoryCard from '../productCategoryCard/ProductCategoryCard'
-import { getProducts } from '@/lib/getData'
+import { getProducts } from '@/lib/data'
 import { Suspense } from 'react'
 
 export default async function ProductCategoryList() {

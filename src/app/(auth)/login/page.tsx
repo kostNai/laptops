@@ -1,6 +1,9 @@
+import LoginForm from '@/components/loginForm/LoginForm'
 
-export default function LoginPage() {
-  return (
-    <div>Login page</div>
-  )
+export default async function LoginPage() {
+	return (
+		<div className="w-full h-full">
+			<LoginForm />
+		</div>
+	)
 }

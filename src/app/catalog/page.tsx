@@ -10,8 +10,8 @@ export default function CatalogPage() {
 					Купити ноутбуки в Україні
 				</h2>
 			</div>
-			<div className="grid grid-cols-4">
-				<div className="col-span-1 mt-16">
+			<div className="grid grid-cols-4 gap-8">
+				<div className="col-span-1 mt-16 bg-white">
 					<Filters />
 				</div>
 				<div className="col-span-3">

@@ -1,8 +1,11 @@
 import axios from 'axios'
 
+const API_LINK =
+	'http://127.0.0.1:8000/api'
+
 export const getProducts = async () => {
 	const res = await axios.get(
-		`${process.env.API_LINK}/products`
+		`${API_LINK}/products`
 	)
 	return res?.data?.products
 }
@@ -11,15 +14,28 @@ export const getProduct = async (
 	productId: string
 ) => {
 	const res = await axios.get(
-		`${process.env.API_LINK}/products/${productId}`
+		`${API_LINK}/products/${productId}`
 	)
 	return res
 }
 
 export const getCpuList = async () => {
 	const res = await axios.get(
-		`${process.env.API_LINK}/cpu`
+		`${API_LINK}/cpu`
 	)
 
 	return res.data.cpu_list
+}
+
+export const login = async (
+	username: string,
+	password: string
+) => {
+	const res = await axios
+		.post(`${API_LINK}/login`, {
+			username,
+			password
+		})
+		.catch((err) => err)
+	return res
 }
