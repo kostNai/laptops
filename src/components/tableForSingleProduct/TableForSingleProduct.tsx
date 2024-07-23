@@ -9,7 +9,7 @@ export default function TableForSingleProduct({
 	product
 }: Props) {
 	return (
-		<table>
+		<table className="h-full">
 			<tbody className="border-t-[1px] border-solid border-gray-300">
 				<tr>
 					<th>Назва</th>

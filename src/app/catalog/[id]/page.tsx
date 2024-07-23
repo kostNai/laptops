@@ -16,7 +16,7 @@ export default async function Page({
 		)
 
 	return (
-		<div className="w-full h-full bg-white">
+		<div className="w-full h-content bg-white ">
 			<SingleProduct
 				product={product}
 			/>

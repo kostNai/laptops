@@ -52,26 +52,31 @@ export const authConfig: AuthOptions = {
 			email,
 			credentials
 		}) {
+			console.log('signin')
 			return true
 		},
+
 		async redirect({ url, baseUrl }) {
+			console.log('red')
+
 			return baseUrl
 		},
+
 		async session({
 			session,
 			user,
 			token
 		}) {
+			console.log(`user-${user}`)
+			console.log(`user`)
+			console.log(token)
 			if (token) {
-				return {
-					...session,
-					user: {
-						...session.user,
-						is_admin: token.is_admin,
-						username: token.username
-					}
-				}
+				session!.user!.is_admin =
+					token.is_admin
+				session!.user!.username =
+					token.username
 			}
+
 			return session
 		},
 
@@ -85,8 +90,13 @@ export const authConfig: AuthOptions = {
 				token.id = user.id
 				token.username = user.username
 				token.is_admin = user.is_admin
+				return token
 			}
+
 			return token
 		}
+	},
+	session: {
+		strategy: 'jwt'
 	}
 }

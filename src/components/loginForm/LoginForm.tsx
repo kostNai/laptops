@@ -27,6 +27,7 @@ export default function LoginForm() {
 				username: '',
 				password: ''
 			})
+			router.push('/')
 		}
 	}, [session.status])
 	const onChangeHandler = (
@@ -46,13 +47,7 @@ export default function LoginForm() {
 			password: user.password,
 			redirect: false
 		})
-		if (
-			session.status === 'authenticated'
-		) {
-			router.push('/')
-		}
 	}
-	console.log(session)
 	return (
 		<div className="bg-white  px-16 pb-16 rounded-xl">
 			<h2 className="text-xl font-bold text-center mt-8">

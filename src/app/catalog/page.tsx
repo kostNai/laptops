@@ -4,7 +4,7 @@ import { Suspense } from 'react'
 
 export default function CatalogPage() {
 	return (
-		<section className="h-full w-full">
+		<section className="h-full w-full mb-8">
 			<div className="mt-8 py-4 border-b-[1px] border-solid border-gray-300">
 				<h2 className="text-3xl ">
 					Купити ноутбуки в Україні

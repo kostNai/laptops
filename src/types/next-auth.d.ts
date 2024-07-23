@@ -13,6 +13,13 @@ declare module 'next-auth' {
 	}
 	interface User {
 		username: string
-		is_admin: boolean & User['user']
+		is_admin: boolean &
+			DefaultUser['user']
+	}
+}
+declare module 'next-auth/jwt' {
+	interface JWT extends DefaultJWT {
+		username: string
+		is_admin: boolean
 	}
 }

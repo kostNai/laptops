@@ -4,7 +4,10 @@ import Link from 'next/link'
 import { RiMenuFill } from 'react-icons/ri'
 import { MdClose } from 'react-icons/md'
 import Navbar from '../navBar/NavBar'
-import { useState } from 'react'
+import {
+	useEffect,
+	useState
+} from 'react'
 import {
 	useSession,
 	signOut
@@ -25,8 +28,18 @@ const links = [
 export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] =
 		useState(false)
-	const session = useSession()
-	console.log(session.data?.user)
+	const {
+		data: session,
+		update: sessionUpdate,
+		status
+	} = useSession()
+
+	useEffect(() => {
+		if (status === 'authenticated')
+			sessionUpdate(
+				session!.user?.username
+			)
+	}, [session?.user?.username])
 
 	const logoutHandler = async () => {
 		await signOut()
@@ -49,13 +62,9 @@ export default function Header() {
 				))}
 			</div>
 			<div className="flex gap-4 max-xl:hidden ">
-				{session.status ===
-				'authenticated' ? (
+				{status === 'authenticated' ? (
 					<>
-						{
-							session.data.user!
-								.username
-						}
+						{session?.user?.username}
 						<button
 							onClick={logoutHandler}
 						>
