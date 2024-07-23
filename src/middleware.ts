@@ -34,7 +34,7 @@ export default withAuth(
 					// return Response.redirect(
 					// 	new URL('/', req.nextUrl)
 					// )
-					return false
+					// return false
 				}
 
 				return true
@@ -43,5 +43,7 @@ export default withAuth(
 	}
 )
 export const config = {
-	matcher: ['/admin']
+	matcher: [
+		'/((?!api|_next|.*\\..*).*)'
+	]
 }

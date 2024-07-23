@@ -39,3 +39,17 @@ export const login = async (
 		.catch((err) => err)
 	return res
 }
+export const register = async (
+	username: string,
+	password: string,
+	email: string
+) => {
+	const res = await axios
+		.post(`${API_LINK}/register`, {
+			username,
+			password,
+			email
+		})
+		.catch((err) => err)
+	return res
+}
