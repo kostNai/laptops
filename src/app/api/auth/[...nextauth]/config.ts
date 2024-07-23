@@ -63,21 +63,28 @@ export const authConfig: AuthOptions = {
 			token
 		}) {
 			if (token) {
-				session.user.username =
-					token.username
+				return {
+					...session,
+					user: {
+						...session.user,
+						is_admin: token.is_admin,
+						username: token.username
+					}
+				}
 			}
 			return session
 		},
+
 		async jwt({
 			token,
 			user,
 			account,
-			profile,
-			isNewUser
+			profile
 		}) {
 			if (user) {
 				token.id = user.id
 				token.username = user.username
+				token.is_admin = user.is_admin
 			}
 			return token
 		}

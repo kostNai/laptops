@@ -1,8 +1,8 @@
 'use client'
 
-import { login } from '@/lib/data'
 import {
 	FormEvent,
+	useEffect,
 	useState
 } from 'react'
 import {
@@ -10,6 +10,7 @@ import {
 	signOut,
 	useSession
 } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 
 export default function LoginForm() {
 	const session = useSession()
@@ -17,6 +18,17 @@ export default function LoginForm() {
 		username: '',
 		password: ''
 	})
+	const router = useRouter()
+	useEffect(() => {
+		if (
+			session.status === 'authenticated'
+		) {
+			setUser({
+				username: '',
+				password: ''
+			})
+		}
+	}, [session.status])
 	const onChangeHandler = (
 		e: React.ChangeEvent<HTMLInputElement>
 	) => {
@@ -29,88 +41,67 @@ export default function LoginForm() {
 		e: FormEvent
 	) => {
 		e.preventDefault()
-		// const formData: FormData =
-		// 	new FormData()
-		// formData.append(
-		// 	'username',
-		// 	user.username
-		// )
-		// formData.append(
-		// 	'password',
-		// 	user.password
-		// )
-		// const res = await login(
-		// 	user.username,
-		// 	user.password
-		// )
 		await signIn('credentials', {
 			username: user.username,
 			password: user.password,
 			redirect: false
 		})
+		if (
+			session.status === 'authenticated'
+		) {
+			router.push('/')
+		}
 	}
 	console.log(session)
-	const onGitHubAuthHandler =
-		async () => {
-			const res = await signIn('github')
-		}
 	return (
-		<div>
+		<div className="bg-white  px-16 pb-16 rounded-xl">
+			<h2 className="text-xl font-bold text-center mt-8">
+				Вхід
+			</h2>
 			<form
-				className="flex flex-col w-fit h-fit gap-4 bg-white rounded-xl px-8 py-16 "
+				className="flex flex-col w-fit h-fit  gap-8 mt-4"
 				onSubmit={onSubmitHandler}
 			>
-				<label
-					htmlFor="username"
-					className="flex gap-4 items-end h-fit p-4"
-				>
-					Username
+				<div>
+					<label
+						htmlFor="username"
+						className="flex gap-4 items-end h-fit "
+					>
+						Логін
+					</label>
 					<input
 						type="text"
 						name="username"
-						className="border-b-[1px] border-soli border-gray-700"
+						className="border-[1px] border-solid border-gray-700 p-2 rounded-lg"
 						value={user.username}
 						onChange={onChangeHandler}
+						placeholder="логін"
 					/>
-				</label>
-
-				<label
-					htmlFor="password"
-					className="flex gap-4"
-				>
-					Password
+				</div>
+				<div>
+					<label
+						htmlFor="password"
+						className="flex gap-4"
+					>
+						Пароль
+					</label>
 					<input
 						type="password"
 						name="password"
-						className="border-b-[1px] border-soli border-gray-700"
+						className="border-[1px] border-solid border-gray-700 p-2 rounded-lg"
 						value={user.password}
 						onChange={onChangeHandler}
+						placeholder="пароль"
 					/>
-				</label>
+				</div>
 				<button
 					// type="submit"
 					onClick={onSubmitHandler}
+					className="bg-header-bg text-white py-4 rounded-lg"
 				>
-					Login
+					Вхід
 				</button>
 			</form>
-			{session && (
-				<>
-					<div>
-						{
-							session.data?.user
-								?.username
-						}
-					</div>
-					<button
-						onClick={
-							onGitHubAuthHandler
-						}
-					>
-						Git
-					</button>
-				</>
-			)}
 		</div>
 	)
 }

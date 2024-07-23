@@ -5,6 +5,10 @@ import { RiMenuFill } from 'react-icons/ri'
 import { MdClose } from 'react-icons/md'
 import Navbar from '../navBar/NavBar'
 import { useState } from 'react'
+import {
+	useSession,
+	signOut
+} from 'next-auth/react'
 
 const links = [
 	{ title: 'Home', path: '/' },
@@ -21,6 +25,12 @@ const links = [
 export default function Header() {
 	const [isMenuOpen, setIsMenuOpen] =
 		useState(false)
+	const session = useSession()
+	console.log(session.data?.user)
+
+	const logoutHandler = async () => {
+		await signOut()
+	}
 
 	return (
 		<header className="flex justify-between shrink grow-0 items-center py-8 px-4 bg-header-bg 0 text-gray-400 rounded-b-xl max-sm:rounded-none">
@@ -39,18 +49,35 @@ export default function Header() {
 				))}
 			</div>
 			<div className="flex gap-4 max-xl:hidden ">
-				<Link
-					href="/login"
-					className="hover:text-white "
-				>
-					Login
-				</Link>
-				<Link
-					href="register"
-					className="hover:text-white "
-				>
-					Register
-				</Link>
+				{session.status ===
+				'authenticated' ? (
+					<>
+						{
+							session.data.user!
+								.username
+						}
+						<button
+							onClick={logoutHandler}
+						>
+							Вийти
+						</button>
+					</>
+				) : (
+					<>
+						<Link
+							href="/login"
+							className="hover:text-white "
+						>
+							Login
+						</Link>
+						<Link
+							href="register"
+							className="hover:text-white "
+						>
+							Register
+						</Link>
+					</>
+				)}
 			</div>
 
 			{isMenuOpen && (
