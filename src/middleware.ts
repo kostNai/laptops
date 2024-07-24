@@ -22,7 +22,7 @@ export default withAuth(
 
 				if (
 					isOnAdminPanel &&
-					!user?.isAdmin
+					!user?.is_admin
 				) {
 					return false
 				}

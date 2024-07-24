@@ -4,19 +4,19 @@
 
 html,
 body {
-	@apply h-screen;
+    @apply h-screen;
 }
 body {
-	@apply bg-body-bg px-32 max-2xl:px-8 max-sm:px-0;
+    @apply bg-body-bg px-32 max-2xl:px-8 max-sm:px-0;
 }
 
 th,
 td {
-	@apply text-start py-[4px];
+    @apply text-start py-[4px];
 }
 th {
-	@apply font-normal opacity-50;
+    @apply font-normal opacity-50;
 }
 td {
-	@apply pl-14;
+    @apply pl-14;
 }
