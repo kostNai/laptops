@@ -14,7 +14,6 @@ export const getProduct = async (productId: string) => {
 
 export const deleteProduct = async (productId: string) => {
     const res = await axios.delete(`${API_LINK}/products/${productId}`)
-
     return res
 }
 
@@ -33,6 +32,7 @@ export const login = async (username: string, password: string) => {
         .catch((err) => err)
     return res
 }
+
 export const register = async (
     username: string,
     password: string,

@@ -7,7 +7,6 @@ import { getServerSession } from 'next-auth'
 
 import Providers from '@/components/SessionProvider'
 import { authConfig } from './api/auth/[...nextauth]/config'
-import { Toaster } from 'sonner'
 
 const inter = Inter({
     subsets: ['latin']
@@ -32,7 +31,6 @@ export default async function RootLayout({
                     <div className="min-h-screen flex flex-col justify-between">
                         <Header />
                         <div className="h-full grow">{children}</div>
-                        <Toaster />
                         <Footer />
                     </div>
                 </Providers>

@@ -1,9 +1,11 @@
 'use client'
 
+import { Toaster } from 'sonner'
+import { toast } from 'sonner'
+
 import { ProductType } from '@/types/ProductType'
 import { Button } from '@/components/ui/button'
 import { deleteProduct } from '@/lib/data'
-import { revalidatePath } from 'next/cache'
 import { revalidateData } from '@/lib/actions'
 
 type Props = {
@@ -15,7 +17,8 @@ export default function AdminProductsTable({ products }: Props) {
         const res = await deleteProduct(productId)
 
         if (res.status === 200) {
-            console.log(res)
+            toast.success('Успішно видалено')
+            revalidateData('/admin/products')
         }
     }
     return (
@@ -47,6 +50,7 @@ export default function AdminProductsTable({ products }: Props) {
                                 {product.created_at}
                             </td>
                             <td className="text-center p-0">
+                                <Toaster position="top-right" richColors />
                                 <div className="w-full flex gap-8">
                                     <Button
                                         variant="link"

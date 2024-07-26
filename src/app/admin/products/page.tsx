@@ -1,6 +1,5 @@
 import AdminProductsTable from '@/components/adminProductsTable/AdminProductsTable'
 import { getProducts } from '@/lib/data'
-import { revalidatePath } from 'next/cache'
 import React, { Suspense } from 'react'
 
 export default async function AdminProductsPage() {
