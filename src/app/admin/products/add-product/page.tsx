@@ -1,5 +1,10 @@
+import AddProductForm from '@/components/addProductForm/AddProductForm'
 import React from 'react'
 
 export default function AddProductPage() {
-    return <div>Add product</div>
+    return (
+        <section>
+            <AddProductForm />
+        </section>
+    )
 }
