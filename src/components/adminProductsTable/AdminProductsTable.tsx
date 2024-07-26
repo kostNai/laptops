@@ -1,10 +1,23 @@
-import { getProducts } from '@/lib/data'
+'use client'
+
 import { ProductType } from '@/types/ProductType'
 import { Button } from '@/components/ui/button'
+import { deleteProduct } from '@/lib/data'
+import { revalidatePath } from 'next/cache'
+import { revalidateData } from '@/lib/actions'
 
-export default async function AdminProductsTable() {
-    const products = await getProducts()
+type Props = {
+    products: ProductType[]
+}
 
+export default function AdminProductsTable({ products }: Props) {
+    const deleteProductHandler = async (productId: string) => {
+        const res = await deleteProduct(productId)
+
+        if (res.status === 200) {
+            console.log(res)
+        }
+    }
     return (
         <div className="mt-16 px-8">
             <table className="w-full table-fixed">
@@ -38,12 +51,20 @@ export default async function AdminProductsTable() {
                                     <Button
                                         variant="link"
                                         className="text-yellow-400"
+                                        onClick={() =>
+                                            revalidateData('/admin/products')
+                                        }
                                     >
                                         Змінити
                                     </Button>
                                     <Button
                                         variant="link"
                                         className="text-red-400"
+                                        onClick={() =>
+                                            deleteProductHandler(
+                                                product.id?.toString()!
+                                            )
+                                        }
                                     >
                                         Видалити
                                     </Button>

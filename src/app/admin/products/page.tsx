@@ -1,7 +1,11 @@
 import AdminProductsTable from '@/components/adminProductsTable/AdminProductsTable'
+import { getProducts } from '@/lib/data'
+import { revalidatePath } from 'next/cache'
 import React, { Suspense } from 'react'
 
-export default function AdminProductsPage() {
+export default async function AdminProductsPage() {
+    const products = await getProducts()
+
     return (
         <div>
             <Suspense
@@ -11,7 +15,7 @@ export default function AdminProductsPage() {
                     </div>
                 }
             >
-                <AdminProductsTable />
+                <AdminProductsTable products={products} />
             </Suspense>
         </div>
     )
