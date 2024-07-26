@@ -11,9 +11,9 @@ export default function Footer() {
         <footer
             className={
                 Boolean(session?.data?.user?.is_admin) === true &&
-                pathName === '/admin'
+                pathName.includes('/admin')
                     ? 'hidden'
-                    : 'flex  shrink grow-0 justify-between p-8 text-white bg-header-bg rounded-t-xl max-sm:rounded-none max-[450px]:flex-col max-[450px]:gap-4 max-[450px]:justify-around max-[450px]:items-center'
+                    : 'flex shrink grow-0 justify-between p-8 text-white bg-header-bg rounded-t-xl max-sm:rounded-none max-[450px]:flex-col max-[450px]:gap-4 max-[450px]:justify-around max-[450px]:items-center'
             }
         >
             <div>

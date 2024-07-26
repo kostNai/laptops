@@ -18,7 +18,7 @@ export default function AdminNavBar() {
     const session = useSession()
 
     return (
-        <div className="h-screen flex flex-col justify-around ml-4 mt-16 pb-8">
+        <div className=" flex flex-col justify-between h-full ml-4 ">
             <nav>
                 <ul className=" flex flex-col gap-8 ">
                     <Link href={`/admin/dashboard`}>
@@ -85,7 +85,7 @@ export default function AdminNavBar() {
                     </Link>
                 </ul>
             </nav>
-            <div className=" p-4 flex ">
+            <div className=" p-4 flex mb-8 ">
                 <div className="flex items-center">
                     <div className="w-8 h-8 rounded-3xl relative object-contain">
                         <Image src={session.data?.user?.img!} alt="" fill />

@@ -28,8 +28,6 @@ export default function Header() {
     const logoutHandler = async () => {
         await signOut()
     }
-    console.log(pathName)
-    console.log(session?.user?.is_admin)
 
     return (
         <header
