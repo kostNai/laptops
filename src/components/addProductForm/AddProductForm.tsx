@@ -2,11 +2,9 @@
 
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import { Label } from '@/components/ui/label'
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import React, { FormEvent, useEffect, useState } from 'react'
-import { CpuType } from '@/types/CpuType'
-import { getCpuList } from '@/lib/data'
+import React, { FormEvent, Suspense, useEffect, useState } from 'react'
+import CpuList from './cpuList/CpuList'
+import { ProductType } from '@/types/ProductType'
 
 export default function AddProductForm() {
     const productFields = [
@@ -51,22 +49,13 @@ export default function AddProductForm() {
             name: 'description'
         }
     ]
-    const [cpuList, setCpuList] = useState<CpuType[] | undefined>([])
-    const [cpuId, setCpuId] = useState<string | undefined>('')
-
-    useEffect(() => {
-        const res = getCpuList().then((data) => {
-            setCpuList(data)
-        })
-    }, [])
-
+    const [product, setProduct] = useState<ProductType | undefined>()
+    const [cpuId, setCpuId] = useState('')
     const onSubmitHandler = (e: FormEvent) => {
         e.preventDefault()
         console.log(cpuId)
     }
-    const onChangeHandler = (e: React.FormEvent<HTMLButtonElement>) => {
-        setCpuId(e.currentTarget.value)
-    }
+
     return (
         <form
             className="mt-16 mx-8 bg-white rounded-xl p-2"
@@ -85,27 +74,7 @@ export default function AddProductForm() {
                     </label>
                 ))}
             </div>
-            <div className="mt-8 pt-4 px-2 border-t-2  border-solid border-gray-200 ">
-                <h3 className="text-xl">Процесор</h3>
-                <RadioGroup defaultValue="option-one" className="mt-4">
-                    {cpuList?.map((cpu) => (
-                        <div
-                            className="flex items-center space-x-2"
-                            key={cpu.id}
-                        >
-                            <RadioGroupItem
-                                value={cpu.id!}
-                                id={cpu.id}
-                                checked={cpuId === cpu.id?.toString()!}
-                                onChange={onChangeHandler}
-                            />
-                            <Label
-                                htmlFor={cpu.id}
-                            >{`${cpu.manufacturer} ${cpu.model}`}</Label>
-                        </div>
-                    ))}
-                </RadioGroup>
-            </div>
+            <CpuList cpuId={cpuId} setCpuId={setCpuId} />
             <Button className="w-40" type="submit">
                 Додати
             </Button>

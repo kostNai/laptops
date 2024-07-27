@@ -22,6 +22,11 @@ export const getCpuList = async () => {
 
     return res.data.cpu_list
 }
+export const getDisplayList = async () => {
+    const res = await axios.get(`${API_LINK}/display`)
+
+    return res.data.displays
+}
 
 export const login = async (username: string, password: string) => {
     const res = await axios
