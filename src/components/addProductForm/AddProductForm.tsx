@@ -6,6 +6,9 @@ import React, { FormEvent, Suspense, useEffect, useState } from 'react'
 import CpuList from './cpuList/CpuList'
 import { ProductType } from '@/types/ProductType'
 import DisplayList from './diplayLsit/DisplayList'
+import MemoryList from './memoryList/MemoryList'
+import RamList from './ramList/RamList'
+import GraphicList from './graphicList/GraphicList'
 
 export default function AddProductForm() {
     const productFields = [
@@ -53,9 +56,24 @@ export default function AddProductForm() {
     const [product, setProduct] = useState<ProductType | undefined>()
     const [cpuId, setCpuId] = useState('')
     const [displayId, setDisplayId] = useState('')
+    const [memoryId, setMemoryId] = useState('')
+    const [ramId, setRamId] = useState('')
+    const [graphicId, setGraphicId] = useState('')
+
+    const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setProduct({
+            ...product,
+            [e.target.name]: e.target.value,
+            cpu_id: cpuId,
+            display_id: displayId,
+            memory_id: memoryId,
+            ram_id: ramId,
+            graphic_id: graphicId
+        })
+    }
+
     const onSubmitHandler = (e: FormEvent) => {
         e.preventDefault()
-        console.log(displayId)
     }
 
     return (
@@ -78,7 +96,10 @@ export default function AddProductForm() {
             </div>
             <CpuList cpuId={cpuId} setCpuId={setCpuId} />
             <DisplayList displayId={displayId} setDisplayId={setDisplayId} />
-            <Button className="w-40" type="submit">
+            <MemoryList memoryId={memoryId} setMemoryId={setMemoryId} />
+            <RamList ramId={ramId} setRamId={setRamId} />
+            <GraphicList graphicId={graphicId} setGraphicId={setGraphicId} />
+            <Button className="w-40 mt-8" type="submit">
                 Додати
             </Button>
         </form>

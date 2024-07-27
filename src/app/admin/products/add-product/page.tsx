@@ -1,10 +1,13 @@
 import AddProductForm from '@/components/addProductForm/AddProductForm'
-import React from 'react'
+import React, { Suspense } from 'react'
+import FadeLoader from 'react-spinners/FadeLoader'
 
-export default function AddProductPage() {
+export default async function AddProductPage() {
     return (
         <section>
-            <AddProductForm />
+            <Suspense fallback={<FadeLoader />}>
+                <AddProductForm />
+            </Suspense>
         </section>
     )
 }

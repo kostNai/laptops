@@ -1,6 +1,7 @@
 export type MemoryType = {
-	manufacturer: string
-	type: string
-	size: number
-	product_id: number
+    id?: string
+    manufacturer: string
+    type: string
+    size: number
+    product_id: number
 }

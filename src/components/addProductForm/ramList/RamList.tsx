@@ -2,27 +2,25 @@
 
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { getDisplayList } from '@/lib/data'
-import { DisplayType } from '@/types/DisplayType'
+import { getRamList } from '@/lib/data'
+import { RamType } from '@/types/RamType'
 import { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
 type Props = {
-    displayId: string
-    setDisplayId: (e: string) => void
+    ramId: string
+    setRamId: (e: string) => void
 }
 
-export default function DisplayList({ displayId, setDisplayId }: Props) {
-    const [displayList, setDisplayList] = useState<DisplayType[] | undefined>(
-        []
-    )
+export default function RamList({ ramId, setRamId }: Props) {
+    const [ramList, setRamList] = useState<RamType[] | undefined>([])
     const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
 
     useEffect(() => {
         setIsLoading(true)
-        const res = getDisplayList().then((data) => {
+        const res = getRamList().then((data) => {
             try {
-                setDisplayList(data)
+                setRamList(data)
                 setIsLoading(false)
             } catch (error) {
                 console.log(error)
@@ -32,27 +30,24 @@ export default function DisplayList({ displayId, setDisplayId }: Props) {
 
     return (
         <div className="8 py-4 px-2   border-solid border-gray-200  border-b-2 ">
-            <h3 className="text-xl">Дисплей</h3>
+            <h3 className="text-xl">ОЗУ</h3>
             {isLoading ? (
                 <FadeLoader />
             ) : (
                 <RadioGroup
                     defaultValue="option-one"
                     className="mt-4"
-                    onValueChange={(e) => setDisplayId(e)}
+                    onValueChange={(e) => setRamId(e)}
                 >
-                    {displayList?.map((display) => (
+                    {ramList?.map((ram) => (
                         <div
                             className="flex items-center space-x-2"
-                            key={display.id}
+                            key={ram.id}
                         >
-                            <RadioGroupItem
-                                value={display.id!}
-                                id={display.id}
-                            />
+                            <RadioGroupItem value={ram.id!} id={ram.id} />
                             <Label
-                                htmlFor={display.id}
-                            >{`${display.matrix} ${display.resolution} ${display.size}"`}</Label>
+                                htmlFor={ram.id}
+                            >{`${ram.manufacturer} ${ram.memory}GB`}</Label>
                         </div>
                     ))}
                 </RadioGroup>

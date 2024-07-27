@@ -27,6 +27,21 @@ export const getDisplayList = async () => {
 
     return res.data.displays
 }
+export const getMemoryList = async () => {
+    const res = await axios.get(`${API_LINK}/memories`)
+
+    return res.data.memories
+}
+export const getRamList = async () => {
+    const res = await axios.get(`${API_LINK}/rams`)
+
+    return res.data.ram_list
+}
+export const getGraphicList = async () => {
+    const res = await axios.get(`${API_LINK}/graphics`)
+
+    return res.data.graphics
+}
 
 export const login = async (username: string, password: string) => {
     const res = await axios
