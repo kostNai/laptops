@@ -1,26 +1,28 @@
 'use client'
 
-import FadeLoader from 'react-spinners/FadeLoader'
-import { getCpuList } from '@/lib/data'
-import { CpuType } from '@/types/CpuType'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import React, { useEffect, useState } from 'react'
+import { getDisplayList } from '@/lib/data'
+import { DisplayType } from '@/types/DisplayType'
+import { useEffect, useState } from 'react'
+import FadeLoader from 'react-spinners/FadeLoader'
 
 type Props = {
-    cpuId: string
-    setCpuId: (e: string) => void
+    displayId: string
+    setDisplayId: (e: string) => void
 }
 
-export default function CpuList({ cpuId, setCpuId }: Props) {
-    const [cpuList, setCpuList] = useState<CpuType[] | undefined>([])
+export default function DisplayList({ displayId, setDisplayId }: Props) {
+    const [displayList, setDisplayList] = useState<DisplayType[] | undefined>(
+        []
+    )
     const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
 
     useEffect(() => {
         setIsLoading(true)
-        const res = getCpuList().then((data) => {
+        const res = getDisplayList().then((data) => {
             try {
-                setCpuList(data)
+                setDisplayList(data)
                 setIsLoading(false)
             } catch (error) {
                 console.log(error)
@@ -30,24 +32,27 @@ export default function CpuList({ cpuId, setCpuId }: Props) {
 
     return (
         <div className="mt-8 py-4 px-2 border-t-2  border-solid border-gray-200  border-b-2 ">
-            <h3 className="text-xl">Процесор</h3>
+            <h3 className="text-xl">Дисплей</h3>
             {isLoading ? (
                 <FadeLoader />
             ) : (
                 <RadioGroup
                     defaultValue="option-one"
                     className="mt-4"
-                    onValueChange={(e) => setCpuId(e)}
+                    onValueChange={(e) => setDisplayId(e)}
                 >
-                    {cpuList?.map((cpu) => (
+                    {displayList?.map((display) => (
                         <div
                             className="flex items-center space-x-2"
-                            key={cpu.id}
+                            key={display.id}
                         >
-                            <RadioGroupItem value={cpu.id!} id={cpu.id} />
+                            <RadioGroupItem
+                                value={display.id!}
+                                id={display.id}
+                            />
                             <Label
-                                htmlFor={cpu.id}
-                            >{`${cpu.manufacturer} ${cpu.model}`}</Label>
+                                htmlFor={display.id}
+                            >{`${display.matrix}`}</Label>
                         </div>
                     ))}
                 </RadioGroup>

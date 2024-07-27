@@ -5,6 +5,7 @@ import { Button } from '../ui/button'
 import React, { FormEvent, Suspense, useEffect, useState } from 'react'
 import CpuList from './cpuList/CpuList'
 import { ProductType } from '@/types/ProductType'
+import DisplayList from './diplayLsit/DisplayList'
 
 export default function AddProductForm() {
     const productFields = [
@@ -51,9 +52,10 @@ export default function AddProductForm() {
     ]
     const [product, setProduct] = useState<ProductType | undefined>()
     const [cpuId, setCpuId] = useState('')
+    const [displayId, setDisplayId] = useState('')
     const onSubmitHandler = (e: FormEvent) => {
         e.preventDefault()
-        console.log(cpuId)
+        console.log(displayId)
     }
 
     return (
@@ -75,6 +77,7 @@ export default function AddProductForm() {
                 ))}
             </div>
             <CpuList cpuId={cpuId} setCpuId={setCpuId} />
+            <DisplayList displayId={displayId} setDisplayId={setDisplayId} />
             <Button className="w-40" type="submit">
                 Додати
             </Button>
