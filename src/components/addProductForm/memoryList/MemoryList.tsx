@@ -3,15 +3,16 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getMemoryList } from '@/lib/data'
 import { DisplayType } from '@/types/DisplayType'
 import { MemoryType } from '@/types/MemoryType'
+import { ProductType } from '@/types/ProductType'
 import React, { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
 type Props = {
-    memoryId: string
-    setMemoryId: (e: string) => void
+    product: ProductType
+    setProduct: (product: ProductType) => void
 }
 
-export default function MemoryList({ memoryId, setMemoryId }: Props) {
+export default function MemoryList({ product, setProduct }: Props) {
     const [memoryList, setMemoryList] = useState<MemoryType[] | undefined>([])
     const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
 
@@ -36,7 +37,9 @@ export default function MemoryList({ memoryId, setMemoryId }: Props) {
                 <RadioGroup
                     defaultValue="option-one"
                     className="mt-4"
-                    onValueChange={(e) => setMemoryId(e)}
+                    onValueChange={(e) =>
+                        setProduct({ ...product, memory_id: e })
+                    }
                 >
                     {memoryList?.map((memory) => (
                         <div

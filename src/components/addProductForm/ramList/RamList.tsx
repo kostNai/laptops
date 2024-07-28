@@ -3,16 +3,17 @@
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getRamList } from '@/lib/data'
+import { ProductType } from '@/types/ProductType'
 import { RamType } from '@/types/RamType'
 import { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
 type Props = {
-    ramId: string
-    setRamId: (e: string) => void
+    product: ProductType
+    setProduct: (product: ProductType) => void
 }
 
-export default function RamList({ ramId, setRamId }: Props) {
+export default function RamList({ product, setProduct }: Props) {
     const [ramList, setRamList] = useState<RamType[] | undefined>([])
     const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
 
@@ -37,7 +38,7 @@ export default function RamList({ ramId, setRamId }: Props) {
                 <RadioGroup
                     defaultValue="option-one"
                     className="mt-4"
-                    onValueChange={(e) => setRamId(e)}
+                    onValueChange={(e) => setProduct({ ...product, ram_id: e })}
                 >
                     {ramList?.map((ram) => (
                         <div

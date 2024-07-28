@@ -2,13 +2,14 @@
 
 import { Input } from '@/components/ui/input'
 import { Button } from '../ui/button'
-import React, { FormEvent, Suspense, useEffect, useState } from 'react'
+import React, { FormEvent, Suspense, useEffect, useRef, useState } from 'react'
 import CpuList from './cpuList/CpuList'
 import { ProductType } from '@/types/ProductType'
 import DisplayList from './diplayLsit/DisplayList'
 import MemoryList from './memoryList/MemoryList'
 import RamList from './ramList/RamList'
 import GraphicList from './graphicList/GraphicList'
+import { addProduct } from '@/lib/data'
 
 export default function AddProductForm() {
     const productFields = [
@@ -53,27 +54,34 @@ export default function AddProductForm() {
             name: 'description'
         }
     ]
-    const [product, setProduct] = useState<ProductType | undefined>()
-    const [cpuId, setCpuId] = useState('')
-    const [displayId, setDisplayId] = useState('')
-    const [memoryId, setMemoryId] = useState('')
-    const [ramId, setRamId] = useState('')
-    const [graphicId, setGraphicId] = useState('')
+    const [product, setProduct] = useState<ProductType | null>(null)
+    const [disable, setDisable] = useState(true)
+    const refs = useRef<HTMLInputElement[]>([])
+
+    useEffect(() => {
+        refs.current.every((e) => e.value.length > 0)
+            ? setDisable(false)
+            : setDisable(true)
+    }, [product])
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProduct({
             ...product,
-            [e.target.name]: e.target.value,
-            cpu_id: cpuId,
-            display_id: displayId,
-            memory_id: memoryId,
-            ram_id: ramId,
-            graphic_id: graphicId
+            [e.target.name]: e.target.value
         })
     }
 
-    const onSubmitHandler = (e: FormEvent) => {
+    const onSubmitHandler = async (e: FormEvent) => {
         e.preventDefault()
+        setDisable(true)
+        const formData: FormData = new FormData()
+        formData.append('product', JSON.stringify(product))
+        const res = await addProduct(formData).then((data) => {
+            if (data.status === 200) {
+                setProduct(null)
+                setDisable(false)
+            }
+        })
     }
 
     return (
@@ -83,23 +91,27 @@ export default function AddProductForm() {
         >
             <h2 className="text-2xl font-bold">Новий продукт</h2>
             <div className="p-2 mt-8 flex flex-col gap-4 flex-wrap  h-80">
-                {productFields.map((productField) => (
+                {productFields.map((productField, indx) => (
                     <label htmlFor={productField.name} key={productField.field}>
                         {productField.field}
                         <Input
                             type="text"
                             name={productField.name}
                             placeholder={productField.field}
+                            onChange={onChangeHandler}
+                            ref={(el) => {
+                                refs.current[indx] = el!
+                            }}
                         />
                     </label>
                 ))}
             </div>
-            <CpuList cpuId={cpuId} setCpuId={setCpuId} />
-            <DisplayList displayId={displayId} setDisplayId={setDisplayId} />
-            <MemoryList memoryId={memoryId} setMemoryId={setMemoryId} />
-            <RamList ramId={ramId} setRamId={setRamId} />
-            <GraphicList graphicId={graphicId} setGraphicId={setGraphicId} />
-            <Button className="w-40 mt-8" type="submit">
+            <CpuList product={product!} setProduct={setProduct} />
+            <DisplayList product={product!} setProduct={setProduct} />
+            <MemoryList product={product!} setProduct={setProduct} />
+            <RamList product={product!} setProduct={setProduct} />
+            <GraphicList product={product!} setProduct={setProduct} />
+            <Button className="w-40 mt-8" type="submit" disabled={disable}>
                 Додати
             </Button>
         </form>

@@ -6,13 +6,14 @@ import { CpuType } from '@/types/CpuType'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import React, { useEffect, useState } from 'react'
+import { ProductType } from '@/types/ProductType'
 
 type Props = {
-    cpuId: string
-    setCpuId: (e: string) => void
+    product: ProductType
+    setProduct: (product: ProductType) => void
 }
 
-export default function CpuList({ cpuId, setCpuId }: Props) {
+export default function CpuList({ product, setProduct }: Props) {
     const [cpuList, setCpuList] = useState<CpuType[] | undefined>([])
     const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
 
@@ -37,7 +38,7 @@ export default function CpuList({ cpuId, setCpuId }: Props) {
                 <RadioGroup
                     defaultValue="option-one"
                     className="mt-4"
-                    onValueChange={(e) => setCpuId(e)}
+                    onValueChange={(e) => setProduct({ ...product, cpu_id: e })}
                 >
                     {cpuList?.map((cpu) => (
                         <div

@@ -4,15 +4,16 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getDisplayList } from '@/lib/data'
 import { DisplayType } from '@/types/DisplayType'
+import { ProductType } from '@/types/ProductType'
 import { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
 type Props = {
-    displayId: string
-    setDisplayId: (e: string) => void
+    product: ProductType
+    setProduct: (product: ProductType) => void
 }
 
-export default function DisplayList({ displayId, setDisplayId }: Props) {
+export default function DisplayList({ product, setProduct }: Props) {
     const [displayList, setDisplayList] = useState<DisplayType[] | undefined>(
         []
     )
@@ -39,7 +40,9 @@ export default function DisplayList({ displayId, setDisplayId }: Props) {
                 <RadioGroup
                     defaultValue="option-one"
                     className="mt-4"
-                    onValueChange={(e) => setDisplayId(e)}
+                    onValueChange={(e) =>
+                        setProduct({ ...product, display_id: e })
+                    }
                 >
                     {displayList?.map((display) => (
                         <div

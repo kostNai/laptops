@@ -4,15 +4,16 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getGraphicList } from '@/lib/data'
 import { GraphicType } from '@/types/GraphicType'
+import { ProductType } from '@/types/ProductType'
 import { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
 type Props = {
-    graphicId: string
-    setGraphicId: (e: string) => void
+    product: ProductType
+    setProduct: (product: ProductType) => void
 }
 
-export default function GraphicList({ graphicId, setGraphicId }: Props) {
+export default function GraphicList({ product, setProduct }: Props) {
     const [graphicList, setGraphicList] = useState<GraphicType[] | undefined>(
         []
     )
@@ -32,14 +33,16 @@ export default function GraphicList({ graphicId, setGraphicId }: Props) {
 
     return (
         <div className="8 py-4 px-2   border-solid border-gray-200  border-b-2 ">
-            <h3 className="text-xl">ОЗУ</h3>
+            <h3 className="text-xl">Графіка</h3>
             {isLoading ? (
                 <FadeLoader />
             ) : (
                 <RadioGroup
                     defaultValue="option-one"
                     className="mt-4"
-                    onValueChange={(e) => setGraphicId(e)}
+                    onValueChange={(e) =>
+                        setProduct({ ...product, graphic_id: e })
+                    }
                 >
                     {graphicList?.map((graphic) => (
                         <div

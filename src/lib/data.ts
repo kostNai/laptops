@@ -1,3 +1,4 @@
+import { ProductType } from '@/types/ProductType'
 import axios from 'axios'
 
 const API_LINK = 'http://127.0.0.1:8000/api'
@@ -41,6 +42,13 @@ export const getGraphicList = async () => {
     const res = await axios.get(`${API_LINK}/graphics`)
 
     return res.data.graphics
+}
+
+export const addProduct = async (formData: FormData) => {
+    const data = JSON.parse(formData.getAll('product')[0].toString())
+    const res = await axios.post(`${API_LINK}/products`, { ...data })
+
+    return res
 }
 
 export const login = async (username: string, password: string) => {
