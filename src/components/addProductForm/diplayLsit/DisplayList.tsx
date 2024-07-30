@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getDisplayList } from '@/lib/data'
 import { DisplayType } from '@/types/DisplayType'
 import { ProductType } from '@/types/ProductType'
+import { filteredData } from '@/utils/filterData'
 import { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
@@ -12,7 +13,9 @@ type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
 }
-
+const filteredOptions = (options: any) => {
+    return Array.from(new Set(options))
+}
 export default function DisplayList({ product, setProduct }: Props) {
     const [displayList, setDisplayList] = useState<DisplayType[] | undefined>(
         []
@@ -44,20 +47,22 @@ export default function DisplayList({ product, setProduct }: Props) {
                         setProduct({ ...product, display_id: e })
                     }
                 >
-                    {displayList?.map((display) => (
-                        <div
-                            className="flex items-center space-x-2"
-                            key={display.id}
-                        >
-                            <RadioGroupItem
-                                value={display.id!}
-                                id={display.id}
-                            />
-                            <Label
-                                htmlFor={display.id}
-                            >{`${display.matrix} ${display.resolution} ${display.size}"`}</Label>
-                        </div>
-                    ))}
+                    {filteredData(displayList)?.map(
+                        (display: DisplayType, indx: number) => (
+                            <div
+                                className="flex items-center space-x-2"
+                                key={indx}
+                            >
+                                <RadioGroupItem
+                                    value={display.id!}
+                                    id={display.id}
+                                />
+                                <Label
+                                    htmlFor={display.id}
+                                >{`${display.matrix} ${display.resolution} ${display.size}"`}</Label>
+                            </div>
+                        )
+                    )}
                 </RadioGroup>
             )}
         </div>

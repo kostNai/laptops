@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getRamList } from '@/lib/data'
 import { ProductType } from '@/types/ProductType'
 import { RamType } from '@/types/RamType'
+import { filteredData } from '@/utils/filterData'
 import { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
@@ -40,17 +41,19 @@ export default function RamList({ product, setProduct }: Props) {
                     className="mt-4"
                     onValueChange={(e) => setProduct({ ...product, ram_id: e })}
                 >
-                    {ramList?.map((ram) => (
-                        <div
-                            className="flex items-center space-x-2"
-                            key={ram.id}
-                        >
-                            <RadioGroupItem value={ram.id!} id={ram.id} />
-                            <Label
-                                htmlFor={ram.id}
-                            >{`${ram.manufacturer} ${ram.memory}GB`}</Label>
-                        </div>
-                    ))}
+                    {filteredData(ramList)?.map(
+                        (ram: RamType, indx: number) => (
+                            <div
+                                className="flex items-center space-x-2"
+                                key={indx}
+                            >
+                                <RadioGroupItem value={ram.id!} id={ram.id} />
+                                <Label
+                                    htmlFor={ram.id}
+                                >{`${ram.manufacturer} ${ram.memory}GB`}</Label>
+                            </div>
+                        )
+                    )}
                 </RadioGroup>
             )}
         </div>

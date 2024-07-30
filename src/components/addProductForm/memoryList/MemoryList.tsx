@@ -4,6 +4,7 @@ import { getMemoryList } from '@/lib/data'
 import { DisplayType } from '@/types/DisplayType'
 import { MemoryType } from '@/types/MemoryType'
 import { ProductType } from '@/types/ProductType'
+import { filteredData } from '@/utils/filterData'
 import React, { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
@@ -41,17 +42,22 @@ export default function MemoryList({ product, setProduct }: Props) {
                         setProduct({ ...product, memory_id: e })
                     }
                 >
-                    {memoryList?.map((memory) => (
-                        <div
-                            className="flex items-center space-x-2"
-                            key={memory.id}
-                        >
-                            <RadioGroupItem value={memory.id!} id={memory.id} />
-                            <Label
-                                htmlFor={memory.id}
-                            >{`${memory.manufacturer} ${memory.size}GB ${memory.type}`}</Label>
-                        </div>
-                    ))}
+                    {filteredData(memoryList)?.map(
+                        (memory: MemoryType, indx: number) => (
+                            <div
+                                className="flex items-center space-x-2"
+                                key={indx}
+                            >
+                                <RadioGroupItem
+                                    value={memory.id!}
+                                    id={memory.id}
+                                />
+                                <Label
+                                    htmlFor={memory.id}
+                                >{`${memory.manufacturer} ${memory.size}GB ${memory.type}`}</Label>
+                            </div>
+                        )
+                    )}
                 </RadioGroup>
             )}
         </div>

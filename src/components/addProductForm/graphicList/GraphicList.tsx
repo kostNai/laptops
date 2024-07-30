@@ -5,6 +5,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { getGraphicList } from '@/lib/data'
 import { GraphicType } from '@/types/GraphicType'
 import { ProductType } from '@/types/ProductType'
+import { filteredData } from '@/utils/filterData'
 import { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
@@ -44,20 +45,22 @@ export default function GraphicList({ product, setProduct }: Props) {
                         setProduct({ ...product, graphic_id: e })
                     }
                 >
-                    {graphicList?.map((graphic) => (
-                        <div
-                            className="flex items-center space-x-2"
-                            key={graphic.id}
-                        >
-                            <RadioGroupItem
-                                value={graphic.id!}
-                                id={graphic.id}
-                            />
-                            <Label
-                                htmlFor={graphic.id}
-                            >{`${graphic.manufacturer} ${graphic.series} ${graphic.model} `}</Label>
-                        </div>
-                    ))}
+                    {filteredData(graphicList)?.map(
+                        (graphic: GraphicType, indx: number) => (
+                            <div
+                                className="flex items-center space-x-2"
+                                key={indx}
+                            >
+                                <RadioGroupItem
+                                    value={graphic.id!}
+                                    id={graphic.id}
+                                />
+                                <Label
+                                    htmlFor={graphic.id}
+                                >{`${graphic.manufacturer} ${graphic.series} ${graphic.model} `}</Label>
+                            </div>
+                        )
+                    )}
                 </RadioGroup>
             )}
         </div>

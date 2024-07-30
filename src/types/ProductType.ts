@@ -29,4 +29,5 @@ export type ProductType = {
     memory?: MemoryType
     ram?: RamType
     created_at?: string
+    updated_at?: string
 }

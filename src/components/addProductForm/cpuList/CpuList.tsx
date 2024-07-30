@@ -7,6 +7,7 @@ import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import React, { useEffect, useState } from 'react'
 import { ProductType } from '@/types/ProductType'
+import { filteredData } from '@/utils/filterData'
 
 type Props = {
     product: ProductType
@@ -40,17 +41,19 @@ export default function CpuList({ product, setProduct }: Props) {
                     className="mt-4"
                     onValueChange={(e) => setProduct({ ...product, cpu_id: e })}
                 >
-                    {cpuList?.map((cpu) => (
-                        <div
-                            className="flex items-center space-x-2"
-                            key={cpu.id}
-                        >
-                            <RadioGroupItem value={cpu.id!} id={cpu.id} />
-                            <Label
-                                htmlFor={cpu.id}
-                            >{`${cpu.manufacturer} ${cpu.model}`}</Label>
-                        </div>
-                    ))}
+                    {filteredData(cpuList)?.map(
+                        (cpu: CpuType, indx: number) => (
+                            <div
+                                className="flex items-center space-x-2"
+                                key={indx}
+                            >
+                                <RadioGroupItem value={cpu.id!} id={cpu.id} />
+                                <Label
+                                    htmlFor={cpu.id}
+                                >{`${cpu.manufacturer} ${cpu.model}`}</Label>
+                            </div>
+                        )
+                    )}
                 </RadioGroup>
             )}
         </div>
