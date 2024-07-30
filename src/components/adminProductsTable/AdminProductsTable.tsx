@@ -1,6 +1,5 @@
 'use client'
 
-import { Toaster } from 'sonner'
 import { toast } from 'sonner'
 
 import { ProductType } from '@/types/ProductType'
@@ -50,7 +49,6 @@ export default function AdminProductsTable({ products }: Props) {
                                 {product.created_at}
                             </td>
                             <td className="text-center p-0">
-                                <Toaster position="top-right" richColors />
                                 <div className="w-full flex gap-8">
                                     <Button
                                         variant="link"

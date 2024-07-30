@@ -28,7 +28,6 @@ export default function Header() {
     const logoutHandler = async () => {
         await signOut()
     }
-
     return (
         <header
             className={

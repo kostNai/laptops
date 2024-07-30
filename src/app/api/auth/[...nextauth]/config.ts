@@ -1,4 +1,4 @@
-import type { AuthOptions } from 'next-auth'
+import type { AuthOptions, Awaitable } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
 export const authConfig: AuthOptions = {
@@ -22,8 +22,15 @@ export const authConfig: AuthOptions = {
                     }
                 })
                 const user = await res.json()
+
                 if (res.ok && user) {
-                    return user.user
+                    // const access_token = user.access_token
+                    // const current_user = user.user
+                    // const res = { access_token, current_user }
+                    return {
+                        ...user,
+                        access_token: user.access_token
+                    }
                 }
                 return null
             }
@@ -47,6 +54,7 @@ export const authConfig: AuthOptions = {
                 session!.user!.username = token.username
                 session!.user!.img = token.img
                 session!.user!.name = token.name
+                session!.user!.access_token = token.access_token
             }
 
             return session
@@ -54,11 +62,12 @@ export const authConfig: AuthOptions = {
 
         async jwt({ token, user, account, profile }) {
             if (user) {
-                token.id = user.id
-                token.username = user.username
-                token.is_admin = user.is_admin
-                token.img = user.img
-                token.name = user.name
+                token.id = user.user.id
+                token.username = user.user.username
+                token.is_admin = user.user.is_admin
+                token.img = user.user.img
+                token.name = user.user.name
+                token.access_token = user.access_token
                 return token
             }
 

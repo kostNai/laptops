@@ -1,8 +1,11 @@
 'use client'
 
+import React, { FormEvent, useEffect, useRef, useState } from 'react'
+import { useSession } from 'next-auth/react'
 import { Input } from '@/components/ui/input'
-import { Button } from '../ui/button'
-import React, { FormEvent, Suspense, useEffect, useRef, useState } from 'react'
+import { Button } from '@/components/ui/button'
+import { Toaster } from 'sonner'
+import { toast } from 'sonner'
 import CpuList from './cpuList/CpuList'
 import { ProductType } from '@/types/ProductType'
 import DisplayList from './diplayLsit/DisplayList'
@@ -54,15 +57,32 @@ export default function AddProductForm() {
             name: 'description'
         }
     ]
+    const MAX_LIMIT_CHARACTERISTICS = 8
+
     const [product, setProduct] = useState<ProductType | null>(null)
     const [disable, setDisable] = useState(true)
+    const [getMore, setGetMore] = useState<boolean>()
+    const [errors, setErrors] = useState('')
+    const [isSuccess, setIsSuccess] = useState(false)
     const refs = useRef<HTMLInputElement[]>([])
+    const session = useSession()
+    const defaultFields = getMore
+        ? productFields
+        : productFields.slice(0, MAX_LIMIT_CHARACTERISTICS)
 
     useEffect(() => {
-        refs.current.every((e) => e.value.length > 0)
+        const additionalProductFields =
+            product?.cpu_id! &&
+            product.display_id! &&
+            product.graphic_id! &&
+            product.ram_id! &&
+            product.memory_id!
+
+        refs.current.every((e) => e.value.length > 0) && additionalProductFields
             ? setDisable(false)
             : setDisable(true)
     }, [product])
+    const token = session.data?.user?.access_token
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProduct({
@@ -76,22 +96,27 @@ export default function AddProductForm() {
         setDisable(true)
         const formData: FormData = new FormData()
         formData.append('product', JSON.stringify(product))
-        const res = await addProduct(formData).then((data) => {
-            if (data.status === 200) {
-                setProduct(null)
-                setDisable(false)
-            }
-        })
+        if (token) {
+            const res = await addProduct(formData, token!)
+                .then((data) => {
+                    if (data.status === 200) {
+                        toast.success('Продукт успішно додано')
+                        setDisable(false)
+                        setIsSuccess(true)
+                    }
+                })
+                .catch((err) => setErrors(err.response.data.message))
+        }
     }
 
     return (
         <form
-            className="mt-16 mx-8 bg-white rounded-xl p-2"
+            className="mt-16 mx-8 bg-white rounded-xl p-2 "
             onSubmit={onSubmitHandler}
         >
             <h2 className="text-2xl font-bold">Новий продукт</h2>
-            <div className="p-2 mt-8 flex flex-col gap-4 flex-wrap  h-80">
-                {productFields.map((productField, indx) => (
+            <div className="p-2 mt-8 flex gap-4 flex-wrap items-start">
+                {defaultFields.map((productField, indx) => (
                     <label htmlFor={productField.name} key={productField.field}>
                         {productField.field}
                         <Input
@@ -106,11 +131,22 @@ export default function AddProductForm() {
                     </label>
                 ))}
             </div>
+
+            <Button
+                variant="link"
+                onClick={() => setGetMore(!getMore)}
+                type="button"
+                className="text-link-hover-color"
+            >
+                Показати більше
+            </Button>
+
             <CpuList product={product!} setProduct={setProduct} />
             <DisplayList product={product!} setProduct={setProduct} />
             <MemoryList product={product!} setProduct={setProduct} />
             <RamList product={product!} setProduct={setProduct} />
             <GraphicList product={product!} setProduct={setProduct} />
+            {errors && <p className="text-sm text-red-500">{errors}</p>}
             <Button className="w-40 mt-8" type="submit" disabled={disable}>
                 Додати
             </Button>

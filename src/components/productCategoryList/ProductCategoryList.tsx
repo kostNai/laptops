@@ -4,21 +4,18 @@ import { getProducts } from '@/lib/data'
 import { Suspense } from 'react'
 
 export default async function ProductCategoryList() {
-	const products: ProductType[] =
-		await getProducts()
-	return (
-		<div className="mt-16 flex flex-wrap gap-4 justify-stretch">
-			<Suspense
-				fallback={<div>Loading...</div>}
-			>
-				{products &&
-					products.map((product) => (
-						<ProductCategoryCard
-							product={product}
-							key={product.id}
-						/>
-					))}
-			</Suspense>
-		</div>
-	)
+    const products: ProductType[] = await getProducts()
+    return (
+        <div className="mt-16 flex flex-wrap gap-4 justify-stretch">
+            <Suspense fallback={<div>Loading...</div>}>
+                {products &&
+                    products.map((product) => (
+                        <ProductCategoryCard
+                            product={product}
+                            key={product.id}
+                        />
+                    ))}
+            </Suspense>
+        </div>
+    )
 }

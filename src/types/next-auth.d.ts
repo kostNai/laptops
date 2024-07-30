@@ -7,12 +7,17 @@ declare module 'next-auth' {
             username: string
             is_admin: boolean
             img: string
+            access_token: string
         } & DefaultSession['user']
     }
     interface User {
-        username: string
-        is_admin: boolean
-        img: string & DefaultUser['user']
+        access_token: string
+        user?: {
+            username: string
+            is_admin: boolean
+            img: string
+            access_token: string
+        } & DefaultUser['user']
     }
 }
 declare module 'next-auth/jwt' {
@@ -20,5 +25,6 @@ declare module 'next-auth/jwt' {
         username: string
         is_admin: boolean
         img: string
+        access_token: string
     }
 }

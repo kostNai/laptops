@@ -44,10 +44,17 @@ export const getGraphicList = async () => {
     return res.data.graphics
 }
 
-export const addProduct = async (formData: FormData) => {
+export const addProduct = async (formData: FormData, token: string) => {
     const data = JSON.parse(formData.getAll('product')[0].toString())
-    const res = await axios.post(`${API_LINK}/products`, { ...data })
-
+    const res = await axios.post(
+        `${API_LINK}/products`,
+        { ...data },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
     return res
 }
 

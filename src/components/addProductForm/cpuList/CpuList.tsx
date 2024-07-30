@@ -19,9 +19,9 @@ export default function CpuList({ product, setProduct }: Props) {
 
     useEffect(() => {
         setIsLoading(true)
-        const res = getCpuList().then((data) => {
+        const res = getCpuList().then((data: CpuType[]) => {
             try {
-                setCpuList(data)
+                setCpuList(Array.from(new Set(data)))
                 setIsLoading(false)
             } catch (error) {
                 console.log(error)
