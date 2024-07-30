@@ -1,13 +1,12 @@
 'use client'
 
 import FadeLoader from 'react-spinners/FadeLoader'
-import { getCpuList } from '@/lib/data'
+import { getCpuList, getFilteredData } from '@/lib/data'
 import { CpuType } from '@/types/CpuType'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import React, { useEffect, useState } from 'react'
 import { ProductType } from '@/types/ProductType'
-import { filteredData } from '@/utils/filterData'
 
 type Props = {
     product: ProductType
@@ -20,9 +19,9 @@ export default function CpuList({ product, setProduct }: Props) {
 
     useEffect(() => {
         setIsLoading(true)
-        const res = getCpuList().then((data: CpuType[]) => {
+        const res = getFilteredData('Cpu').then((data: any) => {
             try {
-                setCpuList(Array.from(new Set(data)))
+                setCpuList(data.data.cpu_list)
                 setIsLoading(false)
             } catch (error) {
                 console.log(error)
@@ -41,19 +40,14 @@ export default function CpuList({ product, setProduct }: Props) {
                     className="mt-4"
                     onValueChange={(e) => setProduct({ ...product, cpu_id: e })}
                 >
-                    {filteredData(cpuList)?.map(
-                        (cpu: CpuType, indx: number) => (
-                            <div
-                                className="flex items-center space-x-2"
-                                key={indx}
-                            >
-                                <RadioGroupItem value={cpu.id!} id={cpu.id} />
-                                <Label
-                                    htmlFor={cpu.id}
-                                >{`${cpu.manufacturer} ${cpu.model}`}</Label>
-                            </div>
-                        )
-                    )}
+                    {cpuList?.map((cpu: CpuType, indx: number) => (
+                        <div className="flex items-center space-x-2" key={indx}>
+                            <RadioGroupItem value={cpu.id!} id={cpu.id} />
+                            <Label
+                                htmlFor={cpu.id}
+                            >{`${cpu.manufacturer} ${cpu.model}`}</Label>
+                        </div>
+                    ))}
                 </RadioGroup>
             )}
         </div>

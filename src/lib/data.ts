@@ -1,4 +1,3 @@
-import { ProductType } from '@/types/ProductType'
 import axios from 'axios'
 
 const API_LINK = 'http://127.0.0.1:8000/api'
@@ -80,5 +79,15 @@ export const register = async (
             email
         })
         .catch((err) => err)
+    return res
+}
+
+export const getFilteredData = async (component: string) => {
+    const res = await axios.get(`${API_LINK}/get-filtered-data`, {
+        params: {
+            component: component
+        }
+    })
+
     return res
 }

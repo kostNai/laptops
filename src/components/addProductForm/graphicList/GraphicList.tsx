@@ -2,10 +2,9 @@
 
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { getGraphicList } from '@/lib/data'
+import { getFilteredData, getGraphicList } from '@/lib/data'
 import { GraphicType } from '@/types/GraphicType'
 import { ProductType } from '@/types/ProductType'
-import { filteredData } from '@/utils/filterData'
 import { useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 
@@ -22,9 +21,9 @@ export default function GraphicList({ product, setProduct }: Props) {
 
     useEffect(() => {
         setIsLoading(true)
-        const res = getGraphicList().then((data) => {
+        const res = getFilteredData('Graphic').then((data: any) => {
             try {
-                setGraphicList(data)
+                setGraphicList(data.data.graphic_list)
                 setIsLoading(false)
             } catch (error) {
                 console.log(error)
@@ -45,22 +44,17 @@ export default function GraphicList({ product, setProduct }: Props) {
                         setProduct({ ...product, graphic_id: e })
                     }
                 >
-                    {filteredData(graphicList)?.map(
-                        (graphic: GraphicType, indx: number) => (
-                            <div
-                                className="flex items-center space-x-2"
-                                key={indx}
-                            >
-                                <RadioGroupItem
-                                    value={graphic.id!}
-                                    id={graphic.id}
-                                />
-                                <Label
-                                    htmlFor={graphic.id}
-                                >{`${graphic.manufacturer} ${graphic.series} ${graphic.model} `}</Label>
-                            </div>
-                        )
-                    )}
+                    {graphicList?.map((graphic: GraphicType, indx: number) => (
+                        <div className="flex items-center space-x-2" key={indx}>
+                            <RadioGroupItem
+                                value={graphic.id!}
+                                id={graphic.id}
+                            />
+                            <Label
+                                htmlFor={graphic.id}
+                            >{`${graphic.manufacturer} ${graphic.series} ${graphic.model} `}</Label>
+                        </div>
+                    ))}
                 </RadioGroup>
             )}
         </div>
