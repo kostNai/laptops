@@ -1,24 +1,42 @@
 'use client'
 
-import { toast } from 'sonner'
+import { useSession } from 'next-auth/react'
 
 import { ProductType } from '@/types/ProductType'
-import { Button } from '@/components/ui/button'
 import { deleteProduct } from '@/lib/data'
 import { revalidateData } from '@/lib/actions'
+
+import { Button } from '@/components/ui/button'
+import { toast } from 'sonner'
+
+import { useState } from 'react'
+import CustomAlertDilog from '../alertDilog/CustomAlertDilog'
 
 type Props = {
     products: ProductType[]
 }
 
 export default function AdminProductsTable({ products }: Props) {
-    const deleteProductHandler = async (productId: string) => {
-        const res = await deleteProduct(productId)
+    const session = useSession()
+    const [isChangeProduct, setIsChangeProduct] = useState<boolean | undefined>(
+        false
+    )
 
-        if (res.status === 200) {
-            toast.success('Успішно видалено')
-            revalidateData('/admin/products')
+    const token = session.data?.user?.access_token
+
+    const deleteProductHandler = async (productId: string) => {
+        if (token) {
+            const res = await deleteProduct(productId, token)
+
+            if (res.status === 200) {
+                toast.success('Успішно видалено')
+                revalidateData('/admin/products')
+                setIsChangeProduct(false)
+            }
         }
+    }
+    const confirmDeleteProductHandler = () => {
+        setIsChangeProduct(true)
     }
     return (
         <div className="mt-16 px-8">
@@ -46,7 +64,10 @@ export default function AdminProductsTable({ products }: Props) {
                                 {product.sales_count}
                             </td>
                             <td className="text-center p-0">
-                                {product.created_at}
+                                {new Date(product.created_at!).toLocaleString(
+                                    'uk',
+                                    { timeZone: 'UTC' }
+                                )}
                             </td>
                             <td className="text-center p-0">
                                 <div className="w-full flex gap-8">
@@ -59,23 +80,23 @@ export default function AdminProductsTable({ products }: Props) {
                                     >
                                         Змінити
                                     </Button>
-                                    <Button
-                                        variant="link"
-                                        className="text-red-400"
-                                        onClick={() =>
-                                            deleteProductHandler(
-                                                product.id?.toString()!
-                                            )
+                                    <CustomAlertDilog
+                                        confirmDeleteProductHandler={
+                                            confirmDeleteProductHandler
                                         }
-                                    >
-                                        Видалити
-                                    </Button>
+                                        deleteProductHandler={
+                                            deleteProductHandler
+                                        }
+                                        setIsChangeProduct={setIsChangeProduct}
+                                        product={product}
+                                    />
                                 </div>
                             </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
+            <div></div>
         </div>
     )
 }

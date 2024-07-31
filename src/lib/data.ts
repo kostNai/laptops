@@ -1,4 +1,8 @@
 import { CpuType } from '@/types/CpuType'
+import { DisplayType } from '@/types/DisplayType'
+import { GraphicType } from '@/types/GraphicType'
+import { MemoryType } from '@/types/MemoryType'
+import { RamType } from '@/types/RamType'
 import axios from 'axios'
 
 const API_LINK = 'http://127.0.0.1:8000/api'
@@ -44,8 +48,12 @@ export const getProduct = async (productId: string) => {
 }
 
 //Delete product
-export const deleteProduct = async (productId: string) => {
-    const res = await axios.delete(`${API_LINK}/products/${productId}`)
+export const deleteProduct = async (productId: string, token: string) => {
+    const res = await axios.delete(`${API_LINK}/products/${productId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`
+        }
+    })
     return res
 }
 
@@ -116,6 +124,70 @@ export const addNewCpu = async (newCpu: CpuType, token: string) => {
         `${API_LINK}/cpu`,
         {
             ...newCpu
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    return res
+}
+//Add new display
+export const addNewDisplay = async (newDisplay: DisplayType, token: string) => {
+    const res = await axios.post(
+        `${API_LINK}/display`,
+        {
+            ...newDisplay
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    return res
+}
+//Add new graphic
+export const addNewGraphic = async (newGraphic: GraphicType, token: string) => {
+    const res = await axios.post(
+        `${API_LINK}/graphic`,
+        {
+            ...newGraphic
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    return res
+}
+//Add new memory
+export const addNewMemory = async (newMemory: MemoryType, token: string) => {
+    const res = await axios.post(
+        `${API_LINK}/memory`,
+        {
+            ...newMemory
+        },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    )
+
+    return res
+}
+//Add new ram
+export const addNewRam = async (newMemory: RamType, token: string) => {
+    const res = await axios.post(
+        `${API_LINK}/ram`,
+        {
+            ...newMemory
         },
         {
             headers: {
