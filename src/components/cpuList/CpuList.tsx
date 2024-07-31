@@ -3,25 +3,16 @@
 import React, { FormEvent, useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from '@/components/ui/dialog'
-import { Input } from '@/components/ui/input'
-import { Label } from '@/components/ui/label'
+
 import { CpuType } from '@/types/CpuType'
 import { addNewCpu, addProduct, getFilteredData } from '@/lib/data'
 import { ProductType } from '@/types/ProductType'
-import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
 import { usePathname } from 'next/navigation'
+import { Label } from '../ui/label'
+import CustomDailog from '../dialog/Dailog'
 
 type Props = {
     product: ProductType
@@ -34,8 +25,6 @@ export default function CpuList({ product, setProduct }: Props) {
     const [newCpu, setNewCpu] = useState<CpuType | null>(null)
     const session = useSession()
     const pathName = usePathname()
-
-    console.log(pathName)
 
     const token = session.data?.user?.access_token
     useEffect(() => {
@@ -63,14 +52,6 @@ export default function CpuList({ product, setProduct }: Props) {
                 if (res.status === 200) {
                     toast.success('Додано успішно')
                     revalidateData(pathName)
-                    setNewCpu({
-                        ...newCpu,
-                        manufacturer: '',
-                        model: '',
-                        series: '',
-                        frequency: 0,
-                        cores_value: 0
-                    })
                 }
             } catch (error) {
                 console.log(error)
@@ -106,96 +87,10 @@ export default function CpuList({ product, setProduct }: Props) {
                     </RadioGroup>
                 )}
             </div>
-            <div>
-                <Dialog>
-                    <DialogTrigger asChild>
-                        <Button variant="outline">Додати новий Процесор</Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px] w-fit">
-                        <DialogHeader>
-                            <DialogTitle>Додати новий Процесор</DialogTitle>
-                            <DialogDescription>
-                                Заповніть усі поля
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="manufacturer"
-                                    className="text-right"
-                                >
-                                    Виробник
-                                </Label>
-                                <Input
-                                    id="manufacturer"
-                                    name="manufacturer"
-                                    className="col-span-3"
-                                    placeholder="Введіть назву виробника"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="model" className="text-right">
-                                    Модель
-                                </Label>
-                                <Input
-                                    id="model"
-                                    name="model"
-                                    placeholder="Введіть назву моделі"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="series" className="text-right">
-                                    Серія
-                                </Label>
-                                <Input
-                                    id="series"
-                                    name="series"
-                                    placeholder="Введіть серію"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="cores_value"
-                                    className="text-right"
-                                >
-                                    Кількість ядер
-                                </Label>
-                                <Input
-                                    id="cores_value"
-                                    name="cores_value"
-                                    placeholder="Введіть кількість ядер"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="frequency"
-                                    className="text-right"
-                                >
-                                    Частота
-                                </Label>
-                                <Input
-                                    name="frequency"
-                                    placeholder="Введіть частоту роботи процесора у MHz"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button type="submit" onClick={onSubmitHandler}>
-                                Додати
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
+            <CustomDailog
+                onChangeHandler={onChangeHanler}
+                onSubmitHandler={onSubmitHandler}
+            />
         </div>
     )
 }
