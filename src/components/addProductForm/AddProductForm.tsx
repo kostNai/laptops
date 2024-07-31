@@ -6,13 +6,9 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Toaster } from 'sonner'
 import { toast } from 'sonner'
-import CpuList from './cpuList/CpuList'
 import { ProductType } from '@/types/ProductType'
-import DisplayList from './diplayLsit/DisplayList'
-import MemoryList from './memoryList/MemoryList'
-import RamList from './ramList/RamList'
-import GraphicList from './graphicList/GraphicList'
 import { addProduct } from '@/lib/data'
+import ComponentsList from '../componentsList/ComponentsList'
 
 export default function AddProductForm() {
     const productFields = [
@@ -140,12 +136,7 @@ export default function AddProductForm() {
             >
                 Показати більше
             </Button>
-
-            <CpuList product={product!} setProduct={setProduct} />
-            <DisplayList product={product!} setProduct={setProduct} />
-            <MemoryList product={product!} setProduct={setProduct} />
-            <RamList product={product!} setProduct={setProduct} />
-            <GraphicList product={product!} setProduct={setProduct} />
+            <ComponentsList product={product!} setProduct={setProduct} />
             {errors && <p className="text-sm text-red-500">{errors}</p>}
             <Button className="w-40 mt-8" type="submit" disabled={disable}>
                 Додати

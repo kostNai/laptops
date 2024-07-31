@@ -31,7 +31,6 @@ export default function DisplayList({ product, setProduct }: Props) {
                 console.log(error)
             }
         })
-        console.log(displayList)
     }, [])
 
     return (

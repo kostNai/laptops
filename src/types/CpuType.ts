@@ -5,6 +5,7 @@ export type CpuType = {
     model: string
     cores_value: number
     frequency: number
+    slug: string
     product_id: number
     created_at?: string
     updated_at?: string
