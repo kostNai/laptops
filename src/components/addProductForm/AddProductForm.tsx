@@ -4,32 +4,13 @@ import React, { FormEvent, useEffect, useRef, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Toaster } from 'sonner'
+
 import { toast } from 'sonner'
 import { ProductType } from '@/types/ProductType'
 import { addProduct } from '@/lib/data'
 import ComponentsList from '../componentsList/ComponentsList'
-import { RamType } from '@/types/RamType'
-import { CpuType } from '@/types/CpuType'
-import { MemoryType } from '@/types/MemoryType'
-import { GraphicType } from '@/types/GraphicType'
-import { DisplayType } from '@/types/DisplayType'
 
-type Props = {
-    ramList: RamType[]
-    // cpuList: CpuType[]
-    memoryList: MemoryType[]
-    graphicList: GraphicType[]
-    displayList: DisplayType[]
-}
-
-export default function AddProductForm({
-    ramList,
-    // cpuList,
-    memoryList,
-    graphicList,
-    displayList
-}: Props) {
+export default function AddProductForm() {
     const productFields = [
         {
             field: 'Виробник',
@@ -142,15 +123,7 @@ export default function AddProductForm({
                     </label>
                 ))}
             </div>
-            <ComponentsList
-                product={product!}
-                setProduct={setProduct}
-                ramList={ramList}
-                // cpuList={cpuList}
-                memoryList={memoryList}
-                graphicList={graphicList}
-                displayList={displayList}
-            />
+            <ComponentsList product={product!} setProduct={setProduct} />
             {errors && <p className="text-sm text-red-500">{errors}</p>}
             <Button className="w-40 mt-8" type="submit" disabled={disable}>
                 Додати

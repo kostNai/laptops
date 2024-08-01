@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { addNewDisplay, getFilteredData } from '@/lib/data'
+import { addNewDisplay } from '@/lib/data'
 import { DisplayType } from '@/types/DisplayType'
 import { ProductType } from '@/types/ProductType'
 import FadeLoader from 'react-spinners/FadeLoader'
@@ -23,24 +23,39 @@ import { Input } from '../ui/input'
 import { toast } from 'sonner'
 import { FaPlus } from 'react-icons/fa6'
 import { revalidateData } from '@/lib/actions'
+import { getFilteredData } from '@/lib/fetcher'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
-    displayList: DisplayType[]
 }
-export default function DisplayList({
-    product,
-    setProduct,
-    displayList
-}: Props) {
-    const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
+
+const MAX_LIMIT_CHARACTERISTICS = 4
+
+export default function DisplayList({ product, setProduct }: Props) {
+    const displayList = getFilteredData('Display')?.display_list
+
     const [newDisplay, setNewDisplay] = useState<DisplayType | null>(null)
     const [open, setOpen] = useState(false)
+    const [getMore, setGetMore] = useState<boolean>()
+    const [defaultFields, setDefaultFields] = useState<DisplayType[]>()
+    const [isLoading, setIsLoading] = useState(true)
     const session = useSession()
     const pathName = usePathname()
 
     const token = session.data?.user?.access_token
+
+    useEffect(() => {
+        if (displayList) {
+            getMore
+                ? setDefaultFields(displayList)
+                : setDefaultFields(
+                      displayList.slice(0, MAX_LIMIT_CHARACTERISTICS)
+                  )
+
+            setIsLoading(false)
+        }
+    }, [getMore, displayList])
 
     const slug = `${newDisplay?.matrix}_${newDisplay?.size}_${newDisplay?.resolution}_${newDisplay?.cover}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +95,7 @@ export default function DisplayList({
                         }
                     >
                         {displayList?.length &&
-                            displayList.map(
+                            defaultFields?.map(
                                 (display: DisplayType, indx: number) => (
                                     <div
                                         className="flex items-center space-x-2"
@@ -97,6 +112,16 @@ export default function DisplayList({
                                 )
                             )}
                     </RadioGroup>
+                )}
+                {displayList?.length! > MAX_LIMIT_CHARACTERISTICS && (
+                    <Button
+                        variant="link"
+                        onClick={() => setGetMore(!getMore)}
+                        type="button"
+                        className="text-link-hover-color"
+                    >
+                        Показати більше
+                    </Button>
                 )}
             </div>
             <div className="mt-8">

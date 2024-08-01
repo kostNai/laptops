@@ -5,7 +5,7 @@ import { usePathname } from 'next/navigation'
 import { FormEvent, useEffect, useState } from 'react'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { addNewGraphic, getFilteredData, getGraphicList } from '@/lib/data'
+import { addNewGraphic } from '@/lib/data'
 import { GraphicType } from '@/types/GraphicType'
 import { ProductType } from '@/types/ProductType'
 import FadeLoader from 'react-spinners/FadeLoader'
@@ -23,25 +23,38 @@ import { FaPlus } from 'react-icons/fa6'
 import { Input } from '../ui/input'
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
+import { getFilteredData } from '@/lib/fetcher'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
-    graphicList: GraphicType[]
 }
 
-export default function GraphicList({
-    product,
-    setProduct,
-    graphicList
-}: Props) {
-    const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
+const MAX_LIMIT_CHARACTERISTICS = 4
+
+export default function GraphicList({ product, setProduct }: Props) {
+    const graphicList = getFilteredData('Graphic')?.graphic_list
+
     const [newGraphic, setNewGraphic] = useState<GraphicType | null>(null)
     const [open, setOpen] = useState(false)
-
+    const [getMore, setGetMore] = useState<boolean>()
+    const [defaultFields, setDefaultFields] = useState<GraphicType[]>()
+    const [isLoading, setIsLoading] = useState(true)
     const session = useSession()
     const pathName = usePathname()
     const token = session.data?.user?.access_token
+
+    useEffect(() => {
+        if (graphicList) {
+            getMore
+                ? setDefaultFields(graphicList)
+                : setDefaultFields(
+                      graphicList.slice(0, MAX_LIMIT_CHARACTERISTICS)
+                  )
+
+            setIsLoading(false)
+        }
+    }, [getMore, graphicList])
 
     const slug = `${newGraphic?.manufacturer}_${newGraphic?.series}_${newGraphic?.model}_${newGraphic?.type}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +93,7 @@ export default function GraphicList({
                             setProduct({ ...product, graphic_id: e })
                         }
                     >
-                        {graphicList?.map(
+                        {defaultFields?.map(
                             (graphic: GraphicType, indx: number) => (
                                 <div
                                     className="flex items-center space-x-2"
@@ -97,6 +110,16 @@ export default function GraphicList({
                             )
                         )}
                     </RadioGroup>
+                )}
+                {graphicList?.length! > MAX_LIMIT_CHARACTERISTICS && (
+                    <Button
+                        variant="link"
+                        onClick={() => setGetMore(!getMore)}
+                        type="button"
+                        className="text-link-hover-color"
+                    >
+                        Показати більше
+                    </Button>
                 )}
             </div>
             <div className="mt-8">

@@ -17,7 +17,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { CpuType } from '@/types/CpuType'
-import { addNewCpu, addProduct } from '@/lib/data'
+import { addNewCpu } from '@/lib/data'
 import { ProductType } from '@/types/ProductType'
 import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
@@ -102,14 +102,16 @@ export default function CpuList({ product, setProduct }: Props) {
                         ))}
                     </RadioGroup>
                 )}
-                <Button
-                    variant="link"
-                    onClick={() => setGetMore(!getMore)}
-                    type="button"
-                    className="text-link-hover-color"
-                >
-                    Показати більше
-                </Button>
+                {cpuList?.length! > MAX_LIMIT_CHARACTERISTICS && (
+                    <Button
+                        variant="link"
+                        onClick={() => setGetMore(!getMore)}
+                        type="button"
+                        className="text-link-hover-color"
+                    >
+                        Показати більше
+                    </Button>
+                )}
             </div>
             <div className="mt-8">
                 <Dialog open={open} onOpenChange={setOpen}>

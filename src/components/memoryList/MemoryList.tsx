@@ -1,6 +1,6 @@
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { addNewMemory, getFilteredData, getMemoryList } from '@/lib/data'
+import { addNewMemory } from '@/lib/data'
 import { MemoryType } from '@/types/MemoryType'
 import { ProductType } from '@/types/ProductType'
 import React, { FormEvent, useEffect, useState } from 'react'
@@ -18,25 +18,41 @@ import { Button } from '../ui/button'
 import { FaPlus } from 'react-icons/fa6'
 import { Input } from '../ui/input'
 import { useSession } from 'next-auth/react'
-import { usePathname, useRouter } from 'next/navigation'
+
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
+import { getFilteredData } from '@/lib/fetcher'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
-    memoryList: MemoryType[]
 }
 
-export default function MemoryList({ product, setProduct, memoryList }: Props) {
-    const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
+const MAX_LIMIT_CHARACTERISTICS = 4
+
+export default function MemoryList({ product, setProduct }: Props) {
+    const memoryList = getFilteredData('Memory')?.memory_list
+
     const [newMemory, setNewMemory] = useState<MemoryType | null>(null)
     const [open, setOpen] = useState(false)
+    const [getMore, setGetMore] = useState<boolean>()
+    const [defaultFields, setDefaultFields] = useState<MemoryType[]>()
+    const [isLoading, setIsLoading] = useState(true)
     const session = useSession()
-    const pathName = usePathname()
-    const router = useRouter()
 
     const token = session.data?.user?.access_token
+
+    useEffect(() => {
+        if (memoryList) {
+            getMore
+                ? setDefaultFields(memoryList)
+                : setDefaultFields(
+                      memoryList.slice(0, MAX_LIMIT_CHARACTERISTICS)
+                  )
+
+            setIsLoading(false)
+        }
+    }, [getMore, memoryList])
 
     const slug = `${newMemory?.manufacturer}_${newMemory?.type}_${newMemory?.size}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,21 +89,33 @@ export default function MemoryList({ product, setProduct, memoryList }: Props) {
                             setProduct({ ...product, memory_id: e })
                         }
                     >
-                        {memoryList?.map((memory: MemoryType, indx: number) => (
-                            <div
-                                className="flex items-center space-x-2"
-                                key={indx}
-                            >
-                                <RadioGroupItem
-                                    value={memory.id!}
-                                    id={memory.id}
-                                />
-                                <Label
-                                    htmlFor={memory.id}
-                                >{`${memory.manufacturer} ${memory.size}GB ${memory.type}`}</Label>
-                            </div>
-                        ))}
+                        {defaultFields?.map(
+                            (memory: MemoryType, indx: number) => (
+                                <div
+                                    className="flex items-center space-x-2"
+                                    key={indx}
+                                >
+                                    <RadioGroupItem
+                                        value={memory.id!}
+                                        id={memory.id}
+                                    />
+                                    <Label
+                                        htmlFor={memory.id}
+                                    >{`${memory.manufacturer} ${memory.size}GB ${memory.type}`}</Label>
+                                </div>
+                            )
+                        )}
                     </RadioGroup>
+                )}
+                {memoryList?.length! > MAX_LIMIT_CHARACTERISTICS && (
+                    <Button
+                        variant="link"
+                        onClick={() => setGetMore(!getMore)}
+                        type="button"
+                        className="text-link-hover-color"
+                    >
+                        Показати більше
+                    </Button>
                 )}
             </div>
             <div className="mt-8">

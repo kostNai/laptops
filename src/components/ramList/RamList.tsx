@@ -5,7 +5,7 @@ import { useSession } from 'next-auth/react'
 import { usePathname } from 'next/navigation'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { addNewRam, getFilteredData, getRamList } from '@/lib/data'
+import { addNewRam } from '@/lib/data'
 import { ProductType } from '@/types/ProductType'
 import { RamType } from '@/types/RamType'
 import FadeLoader from 'react-spinners/FadeLoader'
@@ -23,23 +23,36 @@ import { FaPlus } from 'react-icons/fa6'
 import { Input } from '../ui/input'
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
-import { FilteredDataType } from '@/types/FilteredDataType'
+import { getFilteredData } from '@/lib/fetcher'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
-    ramList: RamType[]
 }
+const MAX_LIMIT_CHARACTERISTICS = 4
 
-export default function RamList({ product, setProduct, ramList }: Props) {
-    const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
+export default function RamList({ product, setProduct }: Props) {
+    const ramList = getFilteredData('Ram')?.ram_list
+
     const [newRam, setNewRam] = useState<RamType | null>(null)
     const [open, setOpen] = useState(false)
-
+    const [getMore, setGetMore] = useState<boolean>()
+    const [defaultFields, setDefaultFields] = useState<RamType[]>()
+    const [isLoading, setIsLoading] = useState(true)
     const session = useSession()
     const pathName = usePathname()
 
     const token = session.data?.user?.access_token
+
+    useEffect(() => {
+        if (ramList) {
+            getMore
+                ? setDefaultFields(ramList)
+                : setDefaultFields(ramList.slice(0, MAX_LIMIT_CHARACTERISTICS))
+
+            setIsLoading(false)
+        }
+    }, [getMore, ramList])
 
     const slug = `${newRam?.manufacturer}_${newRam?.type}_${newRam?.memory}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -78,7 +91,7 @@ export default function RamList({ product, setProduct, ramList }: Props) {
                             setProduct({ ...product, ram_id: e })
                         }
                     >
-                        {ramList?.map((ram: RamType, indx: number) => (
+                        {defaultFields?.map((ram: RamType, indx: number) => (
                             <div
                                 className="flex items-center space-x-2"
                                 key={indx}
@@ -90,6 +103,16 @@ export default function RamList({ product, setProduct, ramList }: Props) {
                             </div>
                         ))}
                     </RadioGroup>
+                )}
+                {ramList?.length! > MAX_LIMIT_CHARACTERISTICS && (
+                    <Button
+                        variant="link"
+                        onClick={() => setGetMore(!getMore)}
+                        type="button"
+                        className="text-link-hover-color"
+                    >
+                        Показати більше
+                    </Button>
                 )}
             </div>
             <div className="mt-8">
