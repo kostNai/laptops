@@ -27,29 +27,20 @@ import { revalidateData } from '@/lib/actions'
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
+    displayList: DisplayType[]
 }
-export default function DisplayList({ product, setProduct }: Props) {
-    const [displayList, setDisplayList] = useState<DisplayType[] | undefined>(
-        []
-    )
+export default function DisplayList({
+    product,
+    setProduct,
+    displayList
+}: Props) {
     const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
     const [newDisplay, setNewDisplay] = useState<DisplayType | null>(null)
+    const [open, setOpen] = useState(false)
     const session = useSession()
     const pathName = usePathname()
 
     const token = session.data?.user?.access_token
-
-    useEffect(() => {
-        setIsLoading(true)
-        const res = getFilteredData('Display').then((data: any) => {
-            try {
-                setDisplayList(data.data.display_list)
-                setIsLoading(false)
-            } catch (error) {
-                console.log(error)
-            }
-        })
-    }, [])
 
     const slug = `${newDisplay?.matrix}_${newDisplay?.size}_${newDisplay?.resolution}_${newDisplay?.cover}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -66,6 +57,7 @@ export default function DisplayList({ product, setProduct }: Props) {
                 if (res.status === 200) {
                     toast.success('Додано успішно')
                     revalidateData(pathName)
+                    setOpen(false)
                 }
             } catch (error) {
                 console.log(error)
@@ -108,7 +100,7 @@ export default function DisplayList({ product, setProduct }: Props) {
                 )}
             </div>
             <div className="mt-8">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button variant="default">
                             Додати <FaPlus className="ml-2" />

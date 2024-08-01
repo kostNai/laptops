@@ -3,7 +3,7 @@
 const API_LINK = 'http://127.0.0.1:8000/api'
 
 import axios from 'axios'
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 export const login = async (formData: FormData) => {
     const data = Object.fromEntries(formData)
@@ -20,4 +20,8 @@ export const login = async (formData: FormData) => {
 
 export const revalidateData = (path: string) => {
     revalidatePath(path, 'page')
+    console.log('revalidated')
+}
+export const revalidateDataByTag = (tag: string) => {
+    revalidateTag(tag)
 }

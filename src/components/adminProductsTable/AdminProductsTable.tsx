@@ -1,16 +1,16 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { signOut, useSession } from 'next-auth/react'
+import { jwtDecode } from 'jwt-decode'
 
+import { toast } from 'sonner'
 import { ProductType } from '@/types/ProductType'
 import { deleteProduct } from '@/lib/data'
 import { revalidateData } from '@/lib/actions'
-
 import { Button } from '@/components/ui/button'
-import { toast } from 'sonner'
-
-import { useState } from 'react'
-import CustomAlertDilog from '../alertDilog/CustomAlertDilog'
+import CustomAlertDilog from '@/components/alertDilog/CustomAlertDilog'
 
 type Props = {
     products: ProductType[]
@@ -21,13 +21,20 @@ export default function AdminProductsTable({ products }: Props) {
     const [isChangeProduct, setIsChangeProduct] = useState<boolean | undefined>(
         false
     )
+    const router = useRouter()
 
     const token = session.data?.user?.access_token
+    const decoded = jwtDecode(token!)
+    const isTokenExp = new Date(0).setUTCSeconds(decoded.exp!) - Date.now()
 
     const deleteProductHandler = async (productId: string) => {
         if (token) {
+            if (isTokenExp <= 0) {
+                toast.error('Помилка авторизації! Увійдіть в акаунт')
+                signOut()
+                router.push('/login')
+            }
             const res = await deleteProduct(productId, token)
-
             if (res.status === 200) {
                 toast.success('Успішно видалено')
                 revalidateData('/admin/products')
@@ -36,7 +43,7 @@ export default function AdminProductsTable({ products }: Props) {
         }
     }
     const confirmDeleteProductHandler = () => {
-        setIsChangeProduct(true)
+        // setIsChangeProduct(true)
     }
     return (
         <div className="mt-16 px-8">
@@ -75,7 +82,8 @@ export default function AdminProductsTable({ products }: Props) {
                                         variant="link"
                                         className="text-yellow-400"
                                         onClick={() =>
-                                            revalidateData('/admin/products')
+                                            // revalidateData('/admin/products')
+                                            router.refresh()
                                         }
                                     >
                                         Змінити
@@ -87,7 +95,6 @@ export default function AdminProductsTable({ products }: Props) {
                                         deleteProductHandler={
                                             deleteProductHandler
                                         }
-                                        setIsChangeProduct={setIsChangeProduct}
                                         product={product}
                                     />
                                 </div>

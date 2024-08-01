@@ -9,8 +9,27 @@ import { toast } from 'sonner'
 import { ProductType } from '@/types/ProductType'
 import { addProduct } from '@/lib/data'
 import ComponentsList from '../componentsList/ComponentsList'
+import { RamType } from '@/types/RamType'
+import { CpuType } from '@/types/CpuType'
+import { MemoryType } from '@/types/MemoryType'
+import { GraphicType } from '@/types/GraphicType'
+import { DisplayType } from '@/types/DisplayType'
 
-export default function AddProductForm() {
+type Props = {
+    ramList: RamType[]
+    // cpuList: CpuType[]
+    memoryList: MemoryType[]
+    graphicList: GraphicType[]
+    displayList: DisplayType[]
+}
+
+export default function AddProductForm({
+    ramList,
+    // cpuList,
+    memoryList,
+    graphicList,
+    displayList
+}: Props) {
     const productFields = [
         {
             field: 'Виробник',
@@ -53,18 +72,13 @@ export default function AddProductForm() {
             name: 'description'
         }
     ]
-    const MAX_LIMIT_CHARACTERISTICS = 8
 
     const [product, setProduct] = useState<ProductType | null>(null)
     const [disable, setDisable] = useState(true)
-    const [getMore, setGetMore] = useState<boolean>()
     const [errors, setErrors] = useState('')
     const [isSuccess, setIsSuccess] = useState(false)
     const refs = useRef<HTMLInputElement[]>([])
     const session = useSession()
-    const defaultFields = getMore
-        ? productFields
-        : productFields.slice(0, MAX_LIMIT_CHARACTERISTICS)
 
     useEffect(() => {
         const additionalProductFields =
@@ -80,6 +94,7 @@ export default function AddProductForm() {
     }, [product])
     const token = session.data?.user?.access_token
 
+    console.log('revalidated form')
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProduct({
             ...product,
@@ -112,7 +127,7 @@ export default function AddProductForm() {
         >
             <h2 className="text-2xl font-bold">Новий продукт</h2>
             <div className="p-2 mt-8 flex gap-4 flex-wrap items-start">
-                {defaultFields.map((productField, indx) => (
+                {productFields.map((productField, indx) => (
                     <label htmlFor={productField.name} key={productField.field}>
                         {productField.field}
                         <Input
@@ -127,16 +142,15 @@ export default function AddProductForm() {
                     </label>
                 ))}
             </div>
-
-            <Button
-                variant="link"
-                onClick={() => setGetMore(!getMore)}
-                type="button"
-                className="text-link-hover-color"
-            >
-                Показати більше
-            </Button>
-            <ComponentsList product={product!} setProduct={setProduct} />
+            <ComponentsList
+                product={product!}
+                setProduct={setProduct}
+                ramList={ramList}
+                // cpuList={cpuList}
+                memoryList={memoryList}
+                graphicList={graphicList}
+                displayList={displayList}
+            />
             {errors && <p className="text-sm text-red-500">{errors}</p>}
             <Button className="w-40 mt-8" type="submit" disabled={disable}>
                 Додати

@@ -18,34 +18,25 @@ import { Button } from '../ui/button'
 import { FaPlus } from 'react-icons/fa6'
 import { Input } from '../ui/input'
 import { useSession } from 'next-auth/react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
+    memoryList: MemoryType[]
 }
 
-export default function MemoryList({ product, setProduct }: Props) {
-    const [memoryList, setMemoryList] = useState<MemoryType[] | undefined>([])
+export default function MemoryList({ product, setProduct, memoryList }: Props) {
     const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
     const [newMemory, setNewMemory] = useState<MemoryType | null>(null)
+    const [open, setOpen] = useState(false)
     const session = useSession()
     const pathName = usePathname()
+    const router = useRouter()
 
     const token = session.data?.user?.access_token
-    useEffect(() => {
-        setIsLoading(true)
-        const res = getFilteredData('Memory').then((data: any) => {
-            try {
-                setMemoryList(data.data.memory_list)
-                setIsLoading(false)
-            } catch (error) {
-                console.log(error)
-            }
-        })
-    }, [])
 
     const slug = `${newMemory?.manufacturer}_${newMemory?.type}_${newMemory?.size}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,14 +45,13 @@ export default function MemoryList({ product, setProduct }: Props) {
 
     const onSubmitHandler = async (e: FormEvent) => {
         e.preventDefault()
-        console.log(newMemory)
         if (token && newMemory) {
             try {
                 const res = await addNewMemory({ ...newMemory, slug }, token)
-
                 if (res.status === 200) {
                     toast.success('Додано успішно')
-                    revalidateData(pathName)
+                    revalidateData('/admin/products/add-product')
+                    setOpen(false)
                 }
             } catch (error) {
                 console.log(error)
@@ -101,7 +91,7 @@ export default function MemoryList({ product, setProduct }: Props) {
                 )}
             </div>
             <div className="mt-8">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button variant="default">
                             Додати <FaPlus className="ml-2" />

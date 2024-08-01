@@ -2,6 +2,8 @@
 
 import React, { FormEvent, useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
+import { usePathname } from 'next/navigation'
+import { FaPlus } from 'react-icons/fa6'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import {
     Dialog,
@@ -15,40 +17,44 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { CpuType } from '@/types/CpuType'
-import { addNewCpu, addProduct, getFilteredData } from '@/lib/data'
+import { addNewCpu, addProduct } from '@/lib/data'
 import { ProductType } from '@/types/ProductType'
 import { Button } from '@/components/ui/button'
 import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
-import { usePathname } from 'next/navigation'
-import { FaPlus } from 'react-icons/fa6'
+import { getFilteredData } from '@/lib/fetcher'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
 }
+const MAX_LIMIT_CHARACTERISTICS = 4
 
 export default function CpuList({ product, setProduct }: Props) {
-    const [cpuList, setCpuList] = useState<CpuType[] | undefined>([])
-    const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
+    const cpuList = getFilteredData('Cpu')?.cpu_list
+
     const [newCpu, setNewCpu] = useState<CpuType | null>(null)
+    const [open, setOpen] = useState(false)
+    const [getMore, setGetMore] = useState<boolean>()
+    const [defaultFields, setDefaultFields] = useState<CpuType[]>()
+    const [isLoading, setIsLoading] = useState(true)
     const session = useSession()
     const pathName = usePathname()
 
     const token = session.data?.user?.access_token
-    useEffect(() => {
-        setIsLoading(true)
-        const res = getFilteredData('Cpu').then((data: any) => {
-            try {
-                setCpuList(data.data.cpu_list)
-                setIsLoading(false)
-            } catch (error) {
-                console.log(error)
-            }
-        })
-    }, [])
     const slug = `${newCpu?.model}_${newCpu?.series}_${newCpu?.cores_value}`
+
+    useEffect(() => {
+        if (cpuList) {
+            getMore
+                ? setDefaultFields(cpuList)
+                : setDefaultFields(cpuList.slice(0, MAX_LIMIT_CHARACTERISTICS))
+
+            setIsLoading(false)
+        }
+    }, [getMore, cpuList])
+
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewCpu({ ...newCpu!, [e.target.name]: e.target.value })
     }
@@ -83,7 +89,7 @@ export default function CpuList({ product, setProduct }: Props) {
                             setProduct({ ...product, cpu_id: e })
                         }
                     >
-                        {cpuList?.map((cpu: CpuType, indx: number) => (
+                        {defaultFields?.map((cpu: CpuType, indx: number) => (
                             <div
                                 className="flex items-center space-x-2"
                                 key={indx}
@@ -96,9 +102,17 @@ export default function CpuList({ product, setProduct }: Props) {
                         ))}
                     </RadioGroup>
                 )}
+                <Button
+                    variant="link"
+                    onClick={() => setGetMore(!getMore)}
+                    type="button"
+                    className="text-link-hover-color"
+                >
+                    Показати більше
+                </Button>
             </div>
             <div className="mt-8">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button variant="default">
                             Додати <FaPlus className="ml-2" />

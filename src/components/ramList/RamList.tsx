@@ -23,32 +23,23 @@ import { FaPlus } from 'react-icons/fa6'
 import { Input } from '../ui/input'
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
+import { FilteredDataType } from '@/types/FilteredDataType'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
+    ramList: RamType[]
 }
 
-export default function RamList({ product, setProduct }: Props) {
-    const [ramList, setRamList] = useState<RamType[] | undefined>([])
+export default function RamList({ product, setProduct, ramList }: Props) {
     const [isLoading, setIsLoading] = useState<boolean | undefined>(false)
     const [newRam, setNewRam] = useState<RamType | null>(null)
+    const [open, setOpen] = useState(false)
+
     const session = useSession()
     const pathName = usePathname()
 
     const token = session.data?.user?.access_token
-
-    useEffect(() => {
-        setIsLoading(true)
-        const res = getFilteredData('Ram').then((data: any) => {
-            try {
-                setRamList(data.data.ram_list)
-                setIsLoading(false)
-            } catch (error) {
-                console.log(error)
-            }
-        })
-    }, [])
 
     const slug = `${newRam?.manufacturer}_${newRam?.type}_${newRam?.memory}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +56,7 @@ export default function RamList({ product, setProduct }: Props) {
                 if (res.status === 200) {
                     toast.success('Додано успішно')
                     revalidateData(pathName)
+                    setOpen(false)
                 }
             } catch (error) {
                 console.log(error)
@@ -101,7 +93,7 @@ export default function RamList({ product, setProduct }: Props) {
                 )}
             </div>
             <div className="mt-8">
-                <Dialog>
+                <Dialog open={open} onOpenChange={setOpen}>
                     <DialogTrigger asChild>
                         <Button variant="default">
                             Додати <FaPlus className="ml-2" />

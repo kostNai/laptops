@@ -1,9 +1,11 @@
 import { CpuType } from '@/types/CpuType'
 import { DisplayType } from '@/types/DisplayType'
+import { FilteredDataType } from '@/types/FilteredDataType'
 import { GraphicType } from '@/types/GraphicType'
 import { MemoryType } from '@/types/MemoryType'
 import { RamType } from '@/types/RamType'
 import axios from 'axios'
+import { headers } from 'next/headers'
 
 const API_LINK = 'http://127.0.0.1:8000/api'
 
@@ -108,10 +110,13 @@ export const addProduct = async (formData: FormData, token: string) => {
 }
 
 //Get filtered list
-export const getFilteredData = async (component: string) => {
+export const getFilteredData = async (component: FilteredDataType) => {
     const res = await axios.get(`${API_LINK}/get-filtered-data`, {
         params: {
-            component: component
+            component: component,
+            headers: {
+                caches: ''
+            }
         }
     })
 
