@@ -9,28 +9,22 @@ import { addNewDisplay } from '@/lib/data'
 import { DisplayType } from '@/types/DisplayType'
 import { ProductType } from '@/types/ProductType'
 import FadeLoader from 'react-spinners/FadeLoader'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from '../ui/dialog'
 import { Button } from '../ui/button'
-import { Input } from '../ui/input'
 import { toast } from 'sonner'
-import { FaPlus } from 'react-icons/fa6'
-import { revalidateData } from '@/lib/actions'
-import { getFilteredData } from '@/lib/fetcher'
+import { getFilteredData, revalidate } from '@/lib/fetcher'
+import ComponentDilog from '../componentDilog/ComponentDilog'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
 }
-
 const MAX_LIMIT_CHARACTERISTICS = 4
+const DIALOG_FIELDS = [
+    { title: 'Покриття', name: 'cover' },
+    { title: 'Матриця', name: 'matrix' },
+    { title: 'Серія', name: 'size' },
+    { title: 'Роздільна здатність', name: 'resolution' }
+]
 
 export default function DisplayList({ product, setProduct }: Props) {
     const displayList = getFilteredData('Display')?.display_list
@@ -41,9 +35,9 @@ export default function DisplayList({ product, setProduct }: Props) {
     const [defaultFields, setDefaultFields] = useState<DisplayType[]>()
     const [isLoading, setIsLoading] = useState(true)
     const session = useSession()
-    const pathName = usePathname()
 
     const token = session.data?.user?.access_token
+    const slug = `${newDisplay?.matrix}_${newDisplay?.size}_${newDisplay?.resolution}_${newDisplay?.cover}`
 
     useEffect(() => {
         if (displayList) {
@@ -52,12 +46,10 @@ export default function DisplayList({ product, setProduct }: Props) {
                 : setDefaultFields(
                       displayList.slice(0, MAX_LIMIT_CHARACTERISTICS)
                   )
-
             setIsLoading(false)
         }
     }, [getMore, displayList])
 
-    const slug = `${newDisplay?.matrix}_${newDisplay?.size}_${newDisplay?.resolution}_${newDisplay?.cover}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewDisplay({ ...newDisplay!, [e.target.name]: e.target.value })
     }
@@ -68,10 +60,9 @@ export default function DisplayList({ product, setProduct }: Props) {
         if (token && newDisplay) {
             try {
                 const res = await addNewDisplay({ ...newDisplay, slug }, token)
-
                 if (res.status === 200) {
                     toast.success('Додано успішно')
-                    revalidateData(pathName)
+                    revalidate('Display')
                     setOpen(false)
                 }
             } catch (error) {
@@ -124,81 +115,14 @@ export default function DisplayList({ product, setProduct }: Props) {
                     </Button>
                 )}
             </div>
-            <div className="mt-8">
-                <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="default">
-                            Додати <FaPlus className="ml-2" />
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px] w-fit">
-                        <DialogHeader>
-                            <DialogTitle>Додати новий Дисплей</DialogTitle>
-                            <DialogDescription>
-                                Заповніть усі поля
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="cover" className="text-right">
-                                    Покриття
-                                </Label>
-                                <Input
-                                    id="cover"
-                                    name="cover"
-                                    className="col-span-3"
-                                    placeholder="Покриття"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="matrix" className="text-right">
-                                    Матриця
-                                </Label>
-                                <Input
-                                    id="matrix"
-                                    name="matrix"
-                                    placeholder="Матриця"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="size" className="text-right">
-                                    Діагональ
-                                </Label>
-                                <Input
-                                    id="size"
-                                    name="size"
-                                    placeholder="Діагональ"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="resolution"
-                                    className="text-right"
-                                >
-                                    Роздільна здатність
-                                </Label>
-                                <Input
-                                    id="resolution"
-                                    name="resolution"
-                                    placeholder="Роздільна здатність"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button type="submit" onClick={onSubmitHandler}>
-                                Додати
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
+            <ComponentDilog
+                open={open}
+                title="Дисплей"
+                componentFields={DIALOG_FIELDS}
+                onSubmitHandler={onSubmitHandler}
+                onChangeHanler={onChangeHanler}
+                setOpen={setOpen}
+            />
         </div>
     )
 }

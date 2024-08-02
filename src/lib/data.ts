@@ -95,17 +95,18 @@ export const getGraphicList = async () => {
 }
 
 //Add new product
-export const addProduct = async (formData: FormData, token: string) => {
-    const data = JSON.parse(formData.getAll('product')[0].toString())
-    const res = await axios.post(
-        `${API_LINK}/products`,
-        { ...data },
-        {
-            headers: {
-                Authorization: `Bearer ${token}`
-            }
+export const addProduct = async (
+    file: File,
+    formData: FormData,
+    token: string
+) => {
+    // formData.append('product_img', file)
+    // const data = JSON.parse(formData.getAll('product')[0].toString())
+    const res = await axios.post(`${API_LINK}/products`, formData, {
+        headers: {
+            Authorization: `Bearer ${token}`
         }
-    )
+    })
     return res
 }
 

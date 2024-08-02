@@ -5,23 +5,12 @@ import { MemoryType } from '@/types/MemoryType'
 import { ProductType } from '@/types/ProductType'
 import React, { FormEvent, useEffect, useState } from 'react'
 import FadeLoader from 'react-spinners/FadeLoader'
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger
-} from '../ui/dialog'
 import { Button } from '../ui/button'
-import { FaPlus } from 'react-icons/fa6'
-import { Input } from '../ui/input'
 import { useSession } from 'next-auth/react'
 
 import { toast } from 'sonner'
-import { revalidateData } from '@/lib/actions'
-import { getFilteredData } from '@/lib/fetcher'
+import { getFilteredData, revalidate } from '@/lib/fetcher'
+import ComponentDilog from '../componentDilog/ComponentDilog'
 
 type Props = {
     product: ProductType
@@ -29,6 +18,12 @@ type Props = {
 }
 
 const MAX_LIMIT_CHARACTERISTICS = 4
+
+const DIALOG_FIELDS = [
+    { title: 'Виробник', name: 'manufacturer' },
+    { title: 'Тип', name: 'type' },
+    { title: "Об'єм", name: 'size' }
+]
 
 export default function MemoryList({ product, setProduct }: Props) {
     const memoryList = getFilteredData('Memory')?.memory_list
@@ -41,6 +36,7 @@ export default function MemoryList({ product, setProduct }: Props) {
     const session = useSession()
 
     const token = session.data?.user?.access_token
+    const slug = `${newMemory?.manufacturer}_${newMemory?.type}_${newMemory?.size}`
 
     useEffect(() => {
         if (memoryList) {
@@ -54,7 +50,6 @@ export default function MemoryList({ product, setProduct }: Props) {
         }
     }, [getMore, memoryList])
 
-    const slug = `${newMemory?.manufacturer}_${newMemory?.type}_${newMemory?.size}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewMemory({ ...newMemory!, [e.target.name]: e.target.value })
     }
@@ -66,7 +61,7 @@ export default function MemoryList({ product, setProduct }: Props) {
                 const res = await addNewMemory({ ...newMemory, slug }, token)
                 if (res.status === 200) {
                     toast.success('Додано успішно')
-                    revalidateData('/admin/products/add-product')
+                    revalidate('Memory')
                     setOpen(false)
                 }
             } catch (error) {
@@ -118,69 +113,14 @@ export default function MemoryList({ product, setProduct }: Props) {
                     </Button>
                 )}
             </div>
-            <div className="mt-8">
-                <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="default">
-                            Додати <FaPlus className="ml-2" />
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px] w-fit">
-                        <DialogHeader>
-                            <DialogTitle>Додати Пам'ять</DialogTitle>
-                            <DialogDescription>
-                                Заповніть усі поля
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="manufacturer"
-                                    className="text-right"
-                                >
-                                    Виробник
-                                </Label>
-                                <Input
-                                    id="manufacturer"
-                                    name="manufacturer"
-                                    className="col-span-3"
-                                    placeholder="Виробник"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-right">
-                                    Тип
-                                </Label>
-                                <Input
-                                    id="type"
-                                    name="type"
-                                    placeholder="Тип"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="size" className="text-right">
-                                    Об'єм
-                                </Label>
-                                <Input
-                                    id="size"
-                                    name="size"
-                                    placeholder="Об'єм"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button type="submit" onClick={onSubmitHandler}>
-                                Додати
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
+            <ComponentDilog
+                open={open}
+                title="Пам'ять"
+                componentFields={DIALOG_FIELDS}
+                onSubmitHandler={onSubmitHandler}
+                onChangeHanler={onChangeHanler}
+                setOpen={setOpen}
+            />
         </div>
     )
 }

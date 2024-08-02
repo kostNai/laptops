@@ -23,14 +23,19 @@ import { FaPlus } from 'react-icons/fa6'
 import { Input } from '../ui/input'
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
-import { getFilteredData } from '@/lib/fetcher'
+import { getFilteredData, revalidate } from '@/lib/fetcher'
+import ComponentDilog from '../componentDilog/ComponentDilog'
 
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
 }
 const MAX_LIMIT_CHARACTERISTICS = 4
-
+const DIALOG_FIELDS = [
+    { title: 'Виробник', name: 'manufacturer' },
+    { title: 'Тип', name: 'type' },
+    { title: "Об'єм", name: 'memory' }
+]
 export default function RamList({ product, setProduct }: Props) {
     const ramList = getFilteredData('Ram')?.ram_list
 
@@ -43,6 +48,7 @@ export default function RamList({ product, setProduct }: Props) {
     const pathName = usePathname()
 
     const token = session.data?.user?.access_token
+    const slug = `${newRam?.manufacturer}_${newRam?.type}_${newRam?.memory}`
 
     useEffect(() => {
         if (ramList) {
@@ -54,7 +60,6 @@ export default function RamList({ product, setProduct }: Props) {
         }
     }, [getMore, ramList])
 
-    const slug = `${newRam?.manufacturer}_${newRam?.type}_${newRam?.memory}`
     const onChangeHanler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setNewRam({ ...newRam!, [e.target.name]: e.target.value })
     }
@@ -68,7 +73,7 @@ export default function RamList({ product, setProduct }: Props) {
 
                 if (res.status === 200) {
                     toast.success('Додано успішно')
-                    revalidateData(pathName)
+                    revalidate('Ram')
                     setOpen(false)
                 }
             } catch (error) {
@@ -115,69 +120,14 @@ export default function RamList({ product, setProduct }: Props) {
                     </Button>
                 )}
             </div>
-            <div className="mt-8">
-                <Dialog open={open} onOpenChange={setOpen}>
-                    <DialogTrigger asChild>
-                        <Button variant="default">
-                            Додати <FaPlus className="ml-2" />
-                        </Button>
-                    </DialogTrigger>
-                    <DialogContent className="sm:max-w-[425px] w-fit">
-                        <DialogHeader>
-                            <DialogTitle>Додати Пам'ять</DialogTitle>
-                            <DialogDescription>
-                                Заповніть усі поля
-                            </DialogDescription>
-                        </DialogHeader>
-                        <div className="grid gap-4 py-4">
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label
-                                    htmlFor="manufacturer"
-                                    className="text-right"
-                                >
-                                    Виробник
-                                </Label>
-                                <Input
-                                    id="manufacturer"
-                                    name="manufacturer"
-                                    className="col-span-3"
-                                    placeholder="Виробник"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="type" className="text-right">
-                                    Тип
-                                </Label>
-                                <Input
-                                    id="type"
-                                    name="type"
-                                    placeholder="Тип"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                            <div className="grid grid-cols-4 items-center gap-4">
-                                <Label htmlFor="memory" className="text-right">
-                                    Об'єм
-                                </Label>
-                                <Input
-                                    id="memory"
-                                    name="memory"
-                                    placeholder="Об'єм"
-                                    className="col-span-3"
-                                    onChange={onChangeHanler}
-                                />
-                            </div>
-                        </div>
-                        <DialogFooter>
-                            <Button type="submit" onClick={onSubmitHandler}>
-                                Додати
-                            </Button>
-                        </DialogFooter>
-                    </DialogContent>
-                </Dialog>
-            </div>
+            <ComponentDilog
+                open={open}
+                title="ОЗУ"
+                componentFields={DIALOG_FIELDS}
+                onSubmitHandler={onSubmitHandler}
+                onChangeHanler={onChangeHanler}
+                setOpen={setOpen}
+            />
         </div>
     )
 }

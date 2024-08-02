@@ -12,10 +12,10 @@ type Props = {
 export default function ProductCategoryCard({ product }: Props) {
     const pathName = usePathname()
     return (
-        <div className="flex flex-col items-center justify-between w-[250px] h-max gap-4 p-4 bg-white border-solid border-gray-300 border-[calc(1px)] rounded-xl hover:shadow-md hover:shadow-current hover:scale-[1.02] transition duration-300">
+        <div className="flex flex-col items-center justify-between w-[250px]  gap-4 p-4 bg-white border-solid border-gray-300 border-[calc(1px)] rounded-xl hover:shadow-md hover:shadow-current hover:scale-[1.02] transition duration-300">
             <div className="cursor-pointer">
                 <Image
-                    src="/test-card-image.png"
+                    src={product.image ? product.image : '/test-card-image.png'}
                     alt=""
                     width={150}
                     height={75}

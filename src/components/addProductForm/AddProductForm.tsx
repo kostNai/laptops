@@ -1,7 +1,7 @@
 'use client'
 
 import React, { FormEvent, useEffect, useRef, useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 
@@ -9,6 +9,10 @@ import { toast } from 'sonner'
 import { ProductType } from '@/types/ProductType'
 import { addProduct } from '@/lib/data'
 import ComponentsList from '../componentsList/ComponentsList'
+import { jwtDecode } from 'jwt-decode'
+import { useRouter } from 'next/navigation'
+import { Label } from '../ui/label'
+import { revalidateData } from '@/lib/actions'
 
 export default function AddProductForm() {
     const productFields = [
@@ -55,11 +59,13 @@ export default function AddProductForm() {
     ]
 
     const [product, setProduct] = useState<ProductType | null>(null)
-    const [disable, setDisable] = useState(true)
+    const [disable, setDisable] = useState<boolean>()
     const [errors, setErrors] = useState('')
     const [isSuccess, setIsSuccess] = useState(false)
+    const [file, setFile] = useState<File | undefined>()
     const refs = useRef<HTMLInputElement[]>([])
     const session = useSession()
+    const router = useRouter()
 
     useEffect(() => {
         const additionalProductFields =
@@ -74,6 +80,8 @@ export default function AddProductForm() {
             : setDisable(true)
     }, [product])
     const token = session.data?.user?.access_token
+    const decoded = jwtDecode(token!)
+    const isTokenExp = new Date(0).setUTCSeconds(decoded.exp!) - Date.now()
 
     console.log('revalidated form')
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -87,14 +95,29 @@ export default function AddProductForm() {
         e.preventDefault()
         setDisable(true)
         const formData: FormData = new FormData()
-        formData.append('product', JSON.stringify(product))
+        const keys = Object.keys(product!)
+
+        keys.map((key: string, indx) => {
+            formData.append(key, Object.values(product!)[indx].toString())
+        })
+        formData.append('product_img', file!)
         if (token) {
-            const res = await addProduct(formData, token!)
+            if (isTokenExp <= 0) {
+                toast.error('Помилка авторизації! Увійдіть в акаунт')
+                signOut()
+                router.push('/login')
+            }
+            const res = await addProduct(file!, formData, token!)
                 .then((data) => {
                     if (data.status === 200) {
                         toast.success('Продукт успішно додано')
                         setDisable(false)
                         setIsSuccess(true)
+                        refs.current.some((e) => (e.value = ''))
+                        if (errors.length > 0) {
+                            setErrors('')
+                        }
+                        revalidateData('/admin/products')
                     }
                 })
                 .catch((err) => setErrors(err.response.data.message))
@@ -124,6 +147,15 @@ export default function AddProductForm() {
                 ))}
             </div>
             <ComponentsList product={product!} setProduct={setProduct} />
+            <div className="grid w-full max-w-sm items-center gap-1.5 mt-8">
+                <Label htmlFor="product_img">Picture</Label>
+                <Input
+                    id="product_img"
+                    name="product_img"
+                    type="file"
+                    onChange={(e) => setFile(e.target.files![0])}
+                />
+            </div>
             {errors && <p className="text-sm text-red-500">{errors}</p>}
             <Button className="w-40 mt-8" type="submit" disabled={disable}>
                 Додати
