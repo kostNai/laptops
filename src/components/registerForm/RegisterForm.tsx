@@ -1,130 +1,117 @@
 'use client'
 
-import { register } from '@/lib/data'
+import { register } from '@/lib/actions'
+// import { register } from '@/lib/data'
+// import { FormEvent, useState } from 'react'
+
 import Link from 'next/link'
-import { FormEvent, useState } from 'react'
+import { useFormState } from 'react-dom'
+import { Button } from '../ui/button'
+import { Label } from '../ui/label'
+import { Input } from '../ui/input'
 
+const initialState = { message: '' }
 export default function RegisterForm() {
-    const [user, setUser] = useState({
-        username: '',
-        email: '',
-        password: '',
-        rePassword: ''
-    })
+    const [state, formAction] = useFormState(register, initialState)
+    console.log(state.message)
+    // const [user, setUser] = useState({
+    //     username: '',
+    //     email: '',
+    //     password: '',
+    //     rePassword: ''
+    // })
 
-    const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setUser({
-            ...user,
-            [e.target.name]: e.target.value
-        })
-    }
+    // const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+    //     setUser({
+    //         ...user,
+    //         [e.target.name]: e.target.value
+    //     })
+    // }
 
-    const onRegisterHandler = async (e: FormEvent) => {
-        e.preventDefault()
-        try {
-            const res = await register(user.username, user.password, user.email)
+    // const onRegisterHandler = async (e: FormEvent) => {
+    //     e.preventDefault()
+    //     try {
+    //         const res = await register(user.username, user.password, user.email)
 
-            if (res.status === 200) {
-                setUser({
-                    username: '',
-                    email: '',
-                    password: '',
-                    rePassword: ''
-                })
-            }
-        } catch (error) {
-            console.log(error)
-        }
-    }
-    const disable =
-        user.password !== user.rePassword ||
-        !user.email ||
-        !user.username ||
-        !user.password ||
-        !user.rePassword
+    //         if (res.status === 200) {
+    //             setUser({
+    //                 username: '',
+    //                 email: '',
+    //                 password: '',
+    //                 rePassword: ''
+    //             })
+    //         }
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
+    // const disable =
+    //     user.password !== user.rePassword ||
+    //     !user.email ||
+    //     !user.username ||
+    //     !user.password ||
+    //     !user.rePassword
     return (
-        <div className="bg-white  px-16 pb-16 rounded-xl">
+        <div className="bg-white  px-16 pb-16 rounded-xl mt-16">
             <h2 className="text-xl font-bold text-center mt-8">Реєстрація</h2>
             <form
-                className="flex flex-col w-fit h-fit  gap-8 mt-4"
-                onSubmit={onRegisterHandler}
+                className="flex flex-col w-fit h-fit  gap-8 mt-4 "
+                action={formAction}
+                // onSubmit={onRegisterHandler}
             >
-                <div className="flex flex-col w-fit h-fit gap-4">
-                    <label
-                        htmlFor="username"
-                        className="flex gap-8 justify-between items-center"
-                    >
-                        Ім'я користувача
-                        <input
+                <div className="flex flex-col w-fit h-fit gap-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2">
+                    <div>
+                        <Label
+                            htmlFor="username"
+                            className="flex gap-8 justify-between items-center"
+                        >
+                            Ім'я користувача
+                        </Label>
+                        <Input
                             type="text"
                             placeholder="Ім'я користувача"
-                            className="border-[1px] border-solid border-gray-700 p-2 rounded-lg"
-                            onChange={onChangeHandler}
-                            value={user.username}
                             name="username"
                         />
-                    </label>
-                    <label
-                        htmlFor="email "
-                        className="flex gap-8 justify-between items-center"
-                    >
-                        Email
-                        <input
-                            type="email"
-                            placeholder="Email"
-                            className="border-[1px] border-solid border-gray-700 p-2 rounded-lg"
-                            onChange={onChangeHandler}
-                            value={user.email}
-                            name="email"
-                        />
-                    </label>
-                    <label
-                        htmlFor="password"
-                        className="flex gap-8 justify-between items-center"
-                    >
-                        Пароль
-                        <input
+                    </div>
+                    <div>
+                        <Label
+                            htmlFor="email "
+                            className="flex gap-8 justify-between items-center"
+                        >
+                            Email
+                        </Label>
+                        <Input type="email" placeholder="Email" name="email" />
+                    </div>
+                    <div>
+                        <Label
+                            htmlFor="password"
+                            className="flex gap-8 justify-between items-center"
+                        >
+                            Пароль
+                        </Label>
+                        <Input
                             type="password"
                             placeholder="Пароль"
-                            className="border-[1px] border-solid border-gray-700 p-2 rounded-lg"
-                            onChange={onChangeHandler}
-                            value={user.password}
                             name="password"
                         />
-                    </label>
-                    <label
-                        htmlFor="rePassword"
-                        className="flex gap-8 justify-between items-center"
-                    >
-                        Повторіть пароль
-                        <input
+                    </div>
+                    <div>
+                        <Label
+                            htmlFor="rePassword"
+                            className="flex gap-8 justify-between items-center"
+                        >
+                            Повторіть пароль
+                        </Label>
+                        <Input
                             type="password"
                             placeholder="Повторіть пароль"
-                            className="border-[1px] border-solid border-gray-700 p-2 rounded-lg"
-                            onChange={onChangeHandler}
-                            value={user.rePassword}
                             name="rePassword"
                         />
-                    </label>
+                    </div>
                 </div>
-                <div className="flex gap-4">
-                    <button
-                        type="submit"
-                        className={
-                            disable
-                                ? 'bg-green-400 text-white py-4 rounded-lg grow transition duration-300 cursor-not-allowed'
-                                : 'bg-green-400 text-white py-4 rounded-lg grow transition duration-300 hover:bg-green-700'
-                        }
-                        disabled={disable}
-                    >
-                        Реєстрація
-                    </button>
-                    <button
-                        type="reset"
-                        className="bg-red-400 text-white py-4 rounded-lg grow transition duration-300 hover:bg-red-700"
-                    >
-                        Відмінити
-                    </button>
+                <div className="flex gap-4 ">
+                    <Button type="submit">Реєстрація</Button>
+                    <Button type="reset">Відмінити</Button>
                 </div>
             </form>
             <Link
