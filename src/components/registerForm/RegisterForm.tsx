@@ -1,63 +1,32 @@
 'use client'
 
 import { register } from '@/lib/actions'
-// import { register } from '@/lib/data'
-// import { FormEvent, useState } from 'react'
 
 import Link from 'next/link'
 import { useFormState } from 'react-dom'
 import { Button } from '../ui/button'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
+import { toast } from 'sonner'
+import { useEffect } from 'react'
+import { RedirectType, redirect } from 'next/navigation'
 
-const initialState = { message: '' }
+const initialState = { message: '', path: '', success: false }
 export default function RegisterForm() {
     const [state, formAction] = useFormState(register, initialState)
-    console.log(state.message)
-    // const [user, setUser] = useState({
-    //     username: '',
-    //     email: '',
-    //     password: '',
-    //     rePassword: ''
-    // })
 
-    // const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //     setUser({
-    //         ...user,
-    //         [e.target.name]: e.target.value
-    //     })
-    // }
+    useEffect(() => {
+        state.success && redirect('/login', RedirectType.replace)
+        state.success && toast.success('Реєстрація успішна')
+        state.message && toast.error('Помилка реєстрації')
+    }, [state])
 
-    // const onRegisterHandler = async (e: FormEvent) => {
-    //     e.preventDefault()
-    //     try {
-    //         const res = await register(user.username, user.password, user.email)
-
-    //         if (res.status === 200) {
-    //             setUser({
-    //                 username: '',
-    //                 email: '',
-    //                 password: '',
-    //                 rePassword: ''
-    //             })
-    //         }
-    //     } catch (error) {
-    //         console.log(error)
-    //     }
-    // }
-    // const disable =
-    //     user.password !== user.rePassword ||
-    //     !user.email ||
-    //     !user.username ||
-    //     !user.password ||
-    //     !user.rePassword
     return (
         <div className="bg-white  px-16 pb-16 rounded-xl mt-16">
             <h2 className="text-xl font-bold text-center mt-8">Реєстрація</h2>
             <form
                 className="flex flex-col w-fit h-fit  gap-8 mt-4 "
                 action={formAction}
-                // onSubmit={onRegisterHandler}
             >
                 <div className="flex flex-col w-fit h-fit gap-4 [&>div]:flex [&>div]:flex-col [&>div]:gap-2">
                     <div>
@@ -67,10 +36,20 @@ export default function RegisterForm() {
                         >
                             Ім'я користувача
                         </Label>
+                        {state.path === 'username' && (
+                            <p className="text-xs text-red-600">
+                                {state.message}
+                            </p>
+                        )}
                         <Input
                             type="text"
                             placeholder="Ім'я користувача"
                             name="username"
+                            className={
+                                state.message && state.path === 'username'
+                                    ? 'placeholder:text-red-400 border-red-600'
+                                    : ''
+                            }
                         />
                     </div>
                     <div>
@@ -80,7 +59,21 @@ export default function RegisterForm() {
                         >
                             Email
                         </Label>
-                        <Input type="email" placeholder="Email" name="email" />
+                        {state.path === 'email' && (
+                            <p className="text-xs text-red-600">
+                                {state.message}
+                            </p>
+                        )}
+                        <Input
+                            type="email"
+                            placeholder="Email"
+                            name="email"
+                            className={
+                                state.message && state.path === 'email'
+                                    ? 'placeholder:text-red-400 border-red-600'
+                                    : ''
+                            }
+                        />
                     </div>
                     <div>
                         <Label
@@ -89,26 +82,53 @@ export default function RegisterForm() {
                         >
                             Пароль
                         </Label>
+
+                        {state.path === 'password' && (
+                            <p className="text-xs text-red-600">
+                                {state.message}
+                            </p>
+                        )}
                         <Input
                             type="password"
                             placeholder="Пароль"
+                            className={
+                                state.message && state.path === 'password'
+                                    ? 'placeholder:text-red-400 border-red-600'
+                                    : ''
+                            }
                             name="password"
                         />
                     </div>
                     <div>
                         <Label
-                            htmlFor="rePassword"
+                            htmlFor="confirmPassword"
                             className="flex gap-8 justify-between items-center"
                         >
                             Повторіть пароль
                         </Label>
+                        {state.path === 'confirmPassword' && (
+                            <p className="text-xs text-red-600">
+                                {state.message}
+                            </p>
+                        )}
                         <Input
+                            className={
+                                state.message &&
+                                state.path === 'confirmPassword'
+                                    ? 'placeholder:text-red-400 border-red-600'
+                                    : ''
+                            }
                             type="password"
                             placeholder="Повторіть пароль"
-                            name="rePassword"
+                            name="confirmPassword"
                         />
                     </div>
                 </div>
+                {state.message && !state.path ? (
+                    <p className="text-xs text-red-600">{state.message}</p>
+                ) : (
+                    false
+                )}
                 <div className="flex gap-4 ">
                     <Button type="submit">Реєстрація</Button>
                     <Button type="reset">Відмінити</Button>

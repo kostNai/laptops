@@ -54,7 +54,6 @@ export default function CpuList({ product, setProduct }: Props) {
 
     const onSubmitHandler = async (e: FormEvent) => {
         e.preventDefault()
-
         if (token && newCpu) {
             try {
                 const res = await addNewCpu({ ...newCpu, slug: slug }, token)
