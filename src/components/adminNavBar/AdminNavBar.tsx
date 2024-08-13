@@ -2,6 +2,8 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { signOut, useSession } from 'next-auth/react'
+import Image from 'next/image'
 
 import { AiOutlineLaptop } from 'react-icons/ai'
 import { MdDashboard } from 'react-icons/md'
@@ -9,9 +11,7 @@ import { FaUsersGear } from 'react-icons/fa6'
 import { TbMessageDots } from 'react-icons/tb'
 import { IoIosSettings } from 'react-icons/io'
 import { IoLogOut } from 'react-icons/io5'
-
-import { signOut, useSession } from 'next-auth/react'
-import Image from 'next/image'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 
 export default function AdminNavBar() {
     const pathName = usePathname()
@@ -87,9 +87,10 @@ export default function AdminNavBar() {
             </nav>
             <div className=" p-4 flex mb-8 ">
                 <div className="flex items-center">
-                    <div className="w-8 h-8 rounded-3xl relative object-contain">
-                        <Image src={session.data?.user?.img!} alt="" fill />
-                    </div>
+                    <Avatar>
+                        <AvatarImage src={session.data?.user?.img!} />
+                        <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
                     <div>
                         <p className="text-sm">{session.data?.user?.name!}</p>
                         <p className="text-sm text-admin-text">

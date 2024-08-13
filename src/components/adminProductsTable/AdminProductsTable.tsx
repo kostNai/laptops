@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import { jwtDecode } from 'jwt-decode'
 
@@ -9,9 +9,7 @@ import { toast } from 'sonner'
 import { ProductType } from '@/types/ProductType'
 import { deleteProduct } from '@/lib/data'
 import { revalidateData } from '@/lib/actions'
-import { Button } from '@/components/ui/button'
 import CustomAlertDilog from '@/components/alertDilog/CustomAlertDilog'
-
 type Props = {
     products: ProductType[]
 }
@@ -22,6 +20,7 @@ export default function AdminProductsTable({ products }: Props) {
         false
     )
     const router = useRouter()
+    const pathName = usePathname()
 
     const token = session.data?.user?.access_token
     const decoded = jwtDecode(token!)
@@ -42,9 +41,6 @@ export default function AdminProductsTable({ products }: Props) {
             }
         }
     }
-    const confirmDeleteProductHandler = () => {
-        // setIsChangeProduct(true)
-    }
     return (
         <div className="mt-16 px-8">
             <table className="w-full table-fixed">
@@ -62,6 +58,9 @@ export default function AdminProductsTable({ products }: Props) {
                         <tr
                             key={product.id}
                             className="hover:bg-header-bg hover:bg-opacity-50 hover:text-white hover:cursor-pointer transition duratoin-300"
+                            onClick={() =>
+                                router.push(`${pathName}/${product.id}`)
+                            }
                         >
                             <td className="text-center p-0">{product.name}</td>
                             <td className="text-center p-0">
@@ -77,21 +76,8 @@ export default function AdminProductsTable({ products }: Props) {
                                 )}
                             </td>
                             <td className="text-center p-0">
-                                <div className="w-full flex gap-8">
-                                    <Button
-                                        variant="link"
-                                        className="text-yellow-400"
-                                        onClick={() =>
-                                            // revalidateData('/admin/products')
-                                            router.refresh()
-                                        }
-                                    >
-                                        Змінити
-                                    </Button>
+                                <div className="w-full py-2 flex justify-center">
                                     <CustomAlertDilog
-                                        confirmDeleteProductHandler={
-                                            confirmDeleteProductHandler
-                                        }
                                         deleteProductHandler={
                                             deleteProductHandler
                                         }

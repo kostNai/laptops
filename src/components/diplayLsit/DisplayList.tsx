@@ -17,6 +17,7 @@ import ComponentDilog from '../componentDilog/ComponentDilog'
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
+    id: string
 }
 const MAX_LIMIT_CHARACTERISTICS = 4
 const DIALOG_FIELDS = [
@@ -26,7 +27,7 @@ const DIALOG_FIELDS = [
     { title: 'Роздільна здатність', name: 'resolution' }
 ]
 
-export default function DisplayList({ product, setProduct }: Props) {
+export default function DisplayList({ product, setProduct, id }: Props) {
     const displayList = getFilteredData('Display')?.display_list
 
     const [newDisplay, setNewDisplay] = useState<DisplayType | null>(null)
@@ -72,7 +73,10 @@ export default function DisplayList({ product, setProduct }: Props) {
     }
 
     return (
-        <div className="8 py-4 px-2   border-solid border-gray-200  border-b-2 ">
+        <div
+            className="8 py-4 px-2   border-solid border-gray-200  border-b-2 "
+            id={id}
+        >
             <div>
                 <h3 className="text-xl font-bold">Дисплей</h3>
                 {isLoading ? (

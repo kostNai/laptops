@@ -82,8 +82,6 @@ export default function AddProductForm() {
     const token = session.data?.user?.access_token
     const decoded = jwtDecode(token!)
     const isTokenExp = new Date(0).setUTCSeconds(decoded.exp!) - Date.now()
-
-    console.log('revalidated form')
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setProduct({
             ...product,

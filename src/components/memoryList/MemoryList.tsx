@@ -15,6 +15,7 @@ import ComponentDilog from '../componentDilog/ComponentDilog'
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
+    id: string
 }
 
 const MAX_LIMIT_CHARACTERISTICS = 4
@@ -25,7 +26,7 @@ const DIALOG_FIELDS = [
     { title: "Об'єм", name: 'size' }
 ]
 
-export default function MemoryList({ product, setProduct }: Props) {
+export default function MemoryList({ product, setProduct, id }: Props) {
     const memoryList = getFilteredData('Memory')?.memory_list
 
     const [newMemory, setNewMemory] = useState<MemoryType | null>(null)
@@ -71,7 +72,10 @@ export default function MemoryList({ product, setProduct }: Props) {
     }
 
     return (
-        <div className="8 py-4 px-2   border-solid border-gray-200  border-b-2 ">
+        <div
+            className="8 py-4 px-2   border-solid border-gray-200  border-b-2 "
+            id={id}
+        >
             <div>
                 <h3 className="text-xl font-bold">Пам'ять</h3>
                 {isLoading ? (

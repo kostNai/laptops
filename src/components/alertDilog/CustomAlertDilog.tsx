@@ -12,26 +12,23 @@ import {
     AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { ProductType } from '@/types/ProductType'
+import { RiDeleteBin6Line } from 'react-icons/ri'
 
 type Props = {
-    confirmDeleteProductHandler: () => void
     deleteProductHandler: (productId: string) => void
     product: ProductType
 }
 
 export default function CustomAlertDilog({
-    confirmDeleteProductHandler,
     deleteProductHandler,
     product
 }: Props) {
     return (
         <div className="flex items-center">
             <AlertDialog>
-                <AlertDialogTrigger
-                    onClick={confirmDeleteProductHandler}
-                    className="text-red-400 text-sm hover:underline"
-                >
+                <AlertDialogTrigger className="text-red-400 text-sm hover:underline hover:text-red-600 transition duration-300 flex gap-2 items-center">
                     Видалити
+                    <RiDeleteBin6Line />
                 </AlertDialogTrigger>
                 <AlertDialogContent>
                     <AlertDialogHeader>

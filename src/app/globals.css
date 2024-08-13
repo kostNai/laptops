@@ -73,7 +73,7 @@ body {
     @apply h-screen;
 }
 body {
-    @apply bg-body-bg px-32 max-2xl:px-8 max-sm:px-0;
+    @apply bg-body-bg;
 }
 
 th,
@@ -85,4 +85,11 @@ th {
 }
 td {
     @apply pl-14;
+}
+.test {
+    display: -webkit-box;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
 }

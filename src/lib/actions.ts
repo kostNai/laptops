@@ -1,11 +1,7 @@
 'use server'
 
-import { string, z } from 'zod'
-
-const API_LINK = 'http://127.0.0.1:8000/api'
-
+import { z } from 'zod'
 import axios from 'axios'
-import { RedirectType, redirect } from 'next/navigation'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
 export const register = async (
@@ -40,9 +36,12 @@ export const register = async (
         })
 
     try {
-        const res = await axios.post(`${API_LINK}/register`, {
-            ...data
-        })
+        const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/register`,
+            {
+                ...data
+            }
+        )
     } catch (error: any) {
         return User.success
             ? {
@@ -60,6 +59,23 @@ export const register = async (
         message: '',
         path: '',
         success: true
+    }
+}
+
+export const editProduct = async (id: string, formData: FormData) => {
+    const data = Object.fromEntries(formData)
+    try {
+        const res = await axios.patch(
+            `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+            {
+                ...data
+            }
+        )
+        revalidatePath('/admin/products/[name]', 'page')
+
+        return res.data
+    } catch (error: any) {
+        return error
     }
 }
 

@@ -35,7 +35,7 @@ export default function LoginForm() {
         })
     }
     return (
-        <div className="bg-white  px-16 pb-16 rounded-xl">
+        <div className="bg-white  px-16 pb-16 rounded-xl mt-32">
             <h2 className="text-xl font-bold text-center mt-8">Вхід</h2>
             <form
                 className="flex flex-col w-fit h-fit  gap-8 mt-4"

@@ -16,6 +16,7 @@ import ComponentDilog from '../componentDilog/ComponentDilog'
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
+    id: string
 }
 const MAX_LIMIT_CHARACTERISTICS = 4
 const DIALOG_FIELDS = [
@@ -25,7 +26,7 @@ const DIALOG_FIELDS = [
     { title: 'Кількість ядер', name: 'cores_value' },
     { title: 'Частота', name: 'frequency' }
 ]
-export default function CpuList({ product, setProduct }: Props) {
+export default function CpuList({ product, setProduct, id }: Props) {
     const cpuList = getFilteredData('Cpu')?.cpu_list
 
     const [newCpu, setNewCpu] = useState<CpuType | null>(null)
@@ -68,7 +69,10 @@ export default function CpuList({ product, setProduct }: Props) {
     }
 
     return (
-        <div className="mt-8 py-4 px-2 border-t-2  border-solid border-gray-200  border-b-2 ">
+        <div
+            className="mt-8 py-4 px-2 border-t-2  border-solid border-gray-200  border-b-2 "
+            id={id}
+        >
             <div>
                 <h3 className="text-xl">Процесор</h3>
                 {isLoading ? (

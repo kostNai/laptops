@@ -29,6 +29,7 @@ import ComponentDilog from '../componentDilog/ComponentDilog'
 type Props = {
     product: ProductType
     setProduct: (product: ProductType) => void
+    id: string
 }
 const MAX_LIMIT_CHARACTERISTICS = 4
 const DIALOG_FIELDS = [
@@ -36,7 +37,7 @@ const DIALOG_FIELDS = [
     { title: 'Тип', name: 'type' },
     { title: "Об'єм", name: 'memory' }
 ]
-export default function RamList({ product, setProduct }: Props) {
+export default function RamList({ product, setProduct, id }: Props) {
     const ramList = getFilteredData('Ram')?.ram_list
 
     const [newRam, setNewRam] = useState<RamType | null>(null)
@@ -83,7 +84,10 @@ export default function RamList({ product, setProduct }: Props) {
     }
 
     return (
-        <div className="8 py-4 px-2   border-solid border-gray-200  border-b-2 ">
+        <div
+            className="8 py-4 px-2   border-solid border-gray-200  border-b-2 "
+            id={id}
+        >
             <div>
                 <h3 className="text-xl font-bold">ОЗУ</h3>
                 {isLoading ? (

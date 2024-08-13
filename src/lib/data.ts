@@ -204,3 +204,11 @@ export const addNewRam = async (newMemory: RamType, token: string) => {
 
     return res
 }
+
+//Get product by name
+export const getProductByName = async (productName: string) => {
+    const res = await axios.get(
+        `${API_LINK}/get-product-by-name/${productName}`
+    )
+    return res
+}
