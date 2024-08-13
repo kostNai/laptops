@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Suspense } from 'react'
 import AdminSingleProductCard from '@/components/adminSingleProductCard/AdminSingleProductCard'
 
 export default async function ProductPage({

@@ -12,11 +12,10 @@ import {
     SelectLabel,
     SelectItem
 } from '@/components/ui/select'
-import { CpuType } from '@/types/CpuType'
 import { ProductType } from '@/types/ProductType'
 import { editProduct } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
-import { getFilteredData, mutateData } from '@/lib/fetcher'
+import { getFilteredData } from '@/lib/fetcher'
 import { RamType } from '@/types/RamType'
 
 type Props = {
