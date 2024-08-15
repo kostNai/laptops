@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import axios from 'axios'
+import axios, { Axios, AxiosError } from 'axios'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
 export const register = async (
@@ -76,6 +76,31 @@ export const editProduct = async (id: string, formData: FormData) => {
         return res.data
     } catch (error: any) {
         return error
+    }
+}
+export const editUser = async (
+    id: string,
+    prevState: { message: string },
+    formData: FormData
+) => {
+    const data = Object.fromEntries(formData)
+    try {
+        const res = await axios.patch(
+            `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
+            {
+                ...data
+            }
+        )
+
+        revalidatePath('/admin/users/', 'page')
+
+        return res
+    } catch (error: any) {
+        if (axios.isAxiosError(error)) {
+            console.log(error.response?.data.message.toString())
+            return { message: error.response?.data.message.toString() }
+        }
+        return { message: error.response.data.message.toString() }
     }
 }
 

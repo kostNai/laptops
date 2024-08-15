@@ -81,7 +81,7 @@ td {
     @apply text-start py-[4px];
 }
 th {
-    @apply font-normal opacity-50;
+    @apply font-normal;
 }
 td {
     @apply pl-14;

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { FormEvent, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { signOut, useSession } from 'next-auth/react'
 import { jwtDecode } from 'jwt-decode'
@@ -75,7 +75,10 @@ export default function AdminProductsTable({ products }: Props) {
                                     { timeZone: 'UTC' }
                                 )}
                             </td>
-                            <td className="text-center p-0">
+                            <td
+                                className="text-center p-0"
+                                onClick={(e) => e.stopPropagation()}
+                            >
                                 <div className="w-full py-2 flex justify-center">
                                     <CustomAlertDilog
                                         deleteProductHandler={

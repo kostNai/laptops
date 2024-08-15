@@ -212,3 +212,9 @@ export const getProductByName = async (productName: string) => {
     )
     return res
 }
+
+export const getAllUsers = async () => {
+    const users = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/users`)
+
+    return users
+}
