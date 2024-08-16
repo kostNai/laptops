@@ -1,7 +1,7 @@
 'use server'
 
 import { z } from 'zod'
-import axios, { Axios, AxiosError } from 'axios'
+import axios from 'axios'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
 export const register = async (
@@ -80,27 +80,22 @@ export const editProduct = async (id: string, formData: FormData) => {
 }
 export const editUser = async (
     id: string,
-    prevState: { message: string },
+    prevState: { message: string; success: boolean },
     formData: FormData
 ) => {
     const data = Object.fromEntries(formData)
+    formData.append('user_img', data.user_img)
     try {
-        const res = await axios.patch(
-            `${process.env.NEXT_PUBLIC_API_URL}/users/${id}`,
-            {
-                ...data
-            }
+        const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/users/${id}?_method=PATCH`,
+            formData
         )
-
-        revalidatePath('/admin/users/', 'page')
-
-        return res
+        return { message: 'Успішно оновлено', success: true }
     } catch (error: any) {
-        if (axios.isAxiosError(error)) {
-            console.log(error.response?.data.message.toString())
-            return { message: error.response?.data.message.toString() }
+        return {
+            message: error?.response?.data.message.toString(),
+            success: false
         }
-        return { message: error.response.data.message.toString() }
     }
 }
 

@@ -17,6 +17,14 @@ export const getFilteredData = (param: FilteredDataType) => {
     )
     return data
 }
+export const getUser = (id: string) => {
+    const { data, error, isLoading } = useSWR(
+        `http://127.0.0.1:8000/api/users/${id}`,
+        fetcher,
+        { revalidateIfStale: true, revalidateOnMount: true }
+    )
+    return data
+}
 
 export const revalidate = (param: string) => {
     mutate(`http://127.0.0.1:8000/api/get-filtered-data/?component=${param}`)

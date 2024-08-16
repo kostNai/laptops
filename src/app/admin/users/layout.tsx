@@ -9,7 +9,7 @@ export default function layout({
     return (
         <div>
             <AdminUsersNav />
-            <div>{children}</div>
+            <div className="px-4">{children}</div>
         </div>
     )
 }

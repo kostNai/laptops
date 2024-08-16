@@ -5,5 +5,5 @@ export type UserType = {
     password?: string
     email?: string
     is_admin?: any
-    image?: string
+    img?: string
 }

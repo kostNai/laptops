@@ -1,6 +1,7 @@
 import AdminProductsTable from '@/components/adminProductsTable/AdminProductsTable'
 import { getProducts } from '@/lib/data'
 import React, { Suspense } from 'react'
+import { FaSpinner } from 'react-icons/fa6'
 
 export default async function AdminProductsPage() {
     const products = await getProducts()
@@ -9,8 +10,8 @@ export default async function AdminProductsPage() {
         <div>
             <Suspense
                 fallback={
-                    <div className="absolute top-1/2 left-1/2 text-3xl font-extrabold">
-                        Products loading...
+                    <div className="absolute top-1/2 left-1/2 ">
+                        <FaSpinner size={100} className="animate-spin" />
                     </div>
                 }
             >

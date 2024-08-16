@@ -1,5 +1,3 @@
-'use client'
-
 import {
     AlertDialog,
     AlertDialogAction,
@@ -27,10 +25,9 @@ type Props = {
     defaultValue: string
     user: UserType
 }
-
 const initialState = { message: '', success: false }
 
-export default function EditUserDialog({
+export default function FileDialog({
     title,
     propName,
     defaultValue,
@@ -73,6 +70,8 @@ export default function EditUserDialog({
                             <Input
                                 name={propName}
                                 defaultValue={defaultValue}
+                                type="file"
+                                className="w-fit"
                             />
                         </Label>
                         <AlertDialogFooter>
