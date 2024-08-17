@@ -99,6 +99,7 @@ export default function RamList({ product, setProduct, id }: Props) {
                         onValueChange={(e) =>
                             setProduct({ ...product, ram_id: e })
                         }
+                        name="ram_id"
                     >
                         {defaultFields?.map((ram: RamType, indx: number) => (
                             <div

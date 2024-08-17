@@ -106,6 +106,32 @@ export const editUser = async (
     }
 }
 
+export const addProduct = async (
+    token: string,
+    prevState: { message: string; success: boolean },
+    formData: FormData
+) => {
+    const data = Object.fromEntries(formData)
+    formData.append('product_img', data.product_img)
+    try {
+        const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/products`,
+            formData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        return { message: 'Успішно додано', success: true }
+    } catch (error: any) {
+        return {
+            message: error?.response?.data.message.toString(),
+            success: false
+        }
+    }
+}
+
 export const revalidateData = (path: string) => {
     revalidatePath(path, 'page')
 }

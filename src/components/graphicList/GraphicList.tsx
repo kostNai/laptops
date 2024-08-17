@@ -90,6 +90,7 @@ export default function GraphicList({ product, setProduct, id }: Props) {
                         onValueChange={(e) =>
                             setProduct({ ...product, graphic_id: e })
                         }
+                        name="graphic_id"
                     >
                         {defaultFields?.map(
                             (graphic: GraphicType, indx: number) => (

@@ -84,6 +84,7 @@ export default function CpuList({ product, setProduct, id }: Props) {
                         onValueChange={(e) =>
                             setProduct({ ...product, cpu_id: e })
                         }
+                        name="cpu_id"
                     >
                         {defaultFields?.map((cpu: CpuType, indx: number) => (
                             <div

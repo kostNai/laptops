@@ -88,6 +88,7 @@ export default function DisplayList({ product, setProduct, id }: Props) {
                         onValueChange={(e) =>
                             setProduct({ ...product, display_id: e })
                         }
+                        name="display_id"
                     >
                         {displayList?.length &&
                             defaultFields?.map(

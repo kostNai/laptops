@@ -87,6 +87,7 @@ export default function MemoryList({ product, setProduct, id }: Props) {
                         onValueChange={(e) =>
                             setProduct({ ...product, memory_id: e })
                         }
+                        name="memory_id"
                     >
                         {defaultFields?.map(
                             (memory: MemoryType, indx: number) => (
