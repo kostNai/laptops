@@ -17,9 +17,10 @@ import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { UserType } from '@/types'
 import { useFormState } from 'react-dom'
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { toast } from 'sonner'
 import { mutateData } from '@/lib/fetcher'
+import { useSession } from 'next-auth/react'
 
 type Props = {
     title: string
@@ -36,7 +37,9 @@ export default function EditUserDialog({
     defaultValue,
     user
 }: Props) {
-    const updateUserWithId = editUser.bind(null, user.id?.toString()!)
+    const session = useSession()
+    const token = session.data?.user?.access_token
+    const updateUserWithId = editUser.bind(null, user.id?.toString()!, token!)
 
     const [state, formAction] = useFormState(updateUserWithId, initialState)
 

@@ -80,15 +80,22 @@ export const editProduct = async (id: string, formData: FormData) => {
 }
 export const editUser = async (
     id: string,
+    token: string,
     prevState: { message: string; success: boolean },
     formData: FormData
 ) => {
     const data = Object.fromEntries(formData)
+    console.log(data)
     formData.append('user_img', data.user_img)
     try {
         const res = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/users/${id}?_method=PATCH`,
-            formData
+            formData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
         )
         return { message: 'Успішно оновлено', success: true }
     } catch (error: any) {

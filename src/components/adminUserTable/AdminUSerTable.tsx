@@ -1,5 +1,5 @@
 'use client'
-import React, { FormEvent } from 'react'
+import React from 'react'
 import {
     Table,
     TableBody,
@@ -15,6 +15,7 @@ import { useRouter, usePathname } from 'next/navigation'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { revalidateData } from '@/lib/actions'
+import { useSession } from 'next-auth/react'
 
 type Props = {
     users: UserType[]
@@ -23,15 +24,25 @@ type Props = {
 export default function AdminUserTable({ users }: Props) {
     const router = useRouter()
     const pathName = usePathname()
+    const session = useSession()
+    const token = session?.data?.user?.access_token
 
-    const onClickHandler = async (id: string) => {
-        const res = await axios.delete(`http://localhost:3000/api/users`, {
-            data: { id }
-        })
-        if (res.data.res.status) {
+    const onDeleteHandler = async (id: string) => {
+        try {
+            if (token) {
+                const res = await axios.delete(
+                    `http://localhost:3000/api/users`,
+                    {
+                        data: { id, token }
+                    }
+                )
+                console.log(res)
+            }
             revalidateData(pathName)
             toast.success('Видалено успішно')
-        } else toast.error(res.data.res.message)
+        } catch (error: any) {
+            toast.error(error.response.data.response.toString())
+        }
     }
     return (
         <Table className="mt-32 ">
@@ -67,7 +78,7 @@ export default function AdminUserTable({ users }: Props) {
                             <Button
                                 variant="link"
                                 className="text-red-400 p-0 w-full "
-                                onClick={() => onClickHandler(user.id!)}
+                                onClick={() => onDeleteHandler(user.id!)}
                             >
                                 Видалити
                             </Button>
