@@ -61,7 +61,7 @@ export default function FileDialog({
                     <AlertDialogHeader>
                         <AlertDialogTitle>{title}</AlertDialogTitle>
                         <AlertDialogDescription>
-                            Введіть нові дані
+                            Оберіть файл
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <form action={formAction} className="flex flex-col gap-2">

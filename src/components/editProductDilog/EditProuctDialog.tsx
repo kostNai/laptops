@@ -16,6 +16,11 @@ import { editProduct } from '@/lib/actions'
 import { ProductType } from '@/types/ProductType'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
+import { useSession } from 'next-auth/react'
+import { useFormState } from 'react-dom'
+import { useEffect } from 'react'
+import { toast } from 'sonner'
+import { mutateData } from '@/lib/fetcher'
 
 type Props = {
     title: string
@@ -23,6 +28,7 @@ type Props = {
     defaultValue: string
     product: ProductType
 }
+const initialState = { message: '', success: false }
 
 export default function EditProuctDialog({
     title,
@@ -30,8 +36,20 @@ export default function EditProuctDialog({
     defaultValue,
     product
 }: Props) {
-    const editProductWithId = editProduct.bind(null, product.id?.toString()!)
+    const session = useSession()
+    const token = session.data?.user?.access_token
 
+    const editProductWithId = editProduct.bind(
+        null,
+        product.id?.toString()!,
+        token!
+    )
+    const [state, formAction] = useFormState(editProductWithId, initialState)
+    useEffect(() => {
+        if (!state.success && state.message) toast.error(state.message)
+        if (state.success && state.message) toast.success(state.message)
+        mutateData(`http://127.0.0.1:8000/api/products/${product.id}`)
+    }, [state])
     return (
         <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -46,10 +64,7 @@ export default function EditProuctDialog({
                         Введіть нові дані
                     </AlertDialogDescription>
                 </AlertDialogHeader>
-                <form
-                    action={editProductWithId}
-                    className="flex flex-col gap-2"
-                >
+                <form action={formAction} className="flex flex-col gap-2">
                     <Label
                         htmlFor={propName}
                         className="flex gap-4 items-center"

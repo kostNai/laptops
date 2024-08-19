@@ -62,22 +62,57 @@ export const register = async (
     }
 }
 
-export const editProduct = async (id: string, formData: FormData) => {
+export const addProduct = async (
+    token: string,
+    prevState: { message: string; success: boolean },
+    formData: FormData
+) => {
     const data = Object.fromEntries(formData)
+    formData.append('product_img', data.product_img)
     try {
-        const res = await axios.patch(
-            `${process.env.NEXT_PUBLIC_API_URL}/products/${id}`,
+        const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/products`,
+            formData,
             {
-                ...data
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             }
         )
-        revalidatePath('/admin/products/[name]', 'page')
-
-        return res.data
+        return { message: 'Успішно додано', success: true }
     } catch (error: any) {
-        return error
+        return {
+            message: error?.response?.data.message.toString(),
+            success: false
+        }
     }
 }
+
+export const editProduct = async (
+    id: string,
+    token: string,
+    prevState: { message: string; success: boolean },
+    formData: FormData
+) => {
+    const data = Object.fromEntries(formData)
+    console.log(data)
+    formData.append('product_img', data.file)
+    try {
+        const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/products/${id}?_method=PATCH`,
+            formData,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        return { message: 'Успішно змінено', success: true }
+    } catch (error: any) {
+        return { message: error.response.data.message, success: false }
+    }
+}
+
 export const editUser = async (
     id: string,
     token: string,
@@ -98,32 +133,6 @@ export const editUser = async (
             }
         )
         return { message: 'Успішно оновлено', success: true }
-    } catch (error: any) {
-        return {
-            message: error?.response?.data.message.toString(),
-            success: false
-        }
-    }
-}
-
-export const addProduct = async (
-    token: string,
-    prevState: { message: string; success: boolean },
-    formData: FormData
-) => {
-    const data = Object.fromEntries(formData)
-    formData.append('product_img', data.product_img)
-    try {
-        const res = await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/products`,
-            formData,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            }
-        )
-        return { message: 'Успішно додано', success: true }
     } catch (error: any) {
         return {
             message: error?.response?.data.message.toString(),

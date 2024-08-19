@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import {
@@ -15,27 +15,35 @@ import {
 import { ProductType } from '@/types/ProductType'
 import { editProduct } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
-import { getFilteredData } from '@/lib/fetcher'
+import { getFilteredData, mutateData } from '@/lib/fetcher'
 import { GraphicType } from '@/types/GraphicType'
+import { toast } from 'sonner'
+import { useFormState } from 'react-dom'
 
 type Props = {
     product: ProductType
+    token: string
+    initialState: { message: string; success: boolean }
 }
 
-export default function SelectGraphic({ product }: Props) {
+export default function SelectGraphic({ product, token, initialState }: Props) {
     const [slug, setSlug] = useState('')
     const [isChange, setIsChange] = useState(false)
     const graphicList: GraphicType[] = getFilteredData('Graphic')?.graphic_list
-    const graphic = graphicList?.find((graphic) => graphic.slug === slug)
-    const formData: FormData = new FormData()
-    if (graphic) {
-        formData.append('graphic_id', graphic.id!)
-    }
     const editProductWithId = editProduct.bind(
         null,
         product?.id?.toString()!,
-        formData
+        token
     )
+    const [state, formAction] = useFormState(editProductWithId, initialState)
+    useEffect(() => {
+        if (state.message && !state.success) toast.error(state.message)
+        if (state.message && state.success) {
+            toast.success(state.message)
+            setSlug('')
+        }
+        mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
+    }, [state])
     return (
         <div className="mt-16 grid grid-cols-2 gap-8">
             <div>
@@ -57,8 +65,12 @@ export default function SelectGraphic({ product }: Props) {
                         Змінити
                     </Button>
                 ) : (
-                    <form action={editProductWithId}>
-                        <Select onValueChange={(value) => setSlug(value)}>
+                    <form action={formAction}>
+                        <Select
+                            onValueChange={setSlug}
+                            value={slug}
+                            name="graphic_id"
+                        >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Оберіть графіку" />
                             </SelectTrigger>
@@ -67,7 +79,7 @@ export default function SelectGraphic({ product }: Props) {
                                     <SelectLabel>Графіка</SelectLabel>
                                     {graphicList?.map((graphic) => (
                                         <SelectItem
-                                            value={graphic.slug}
+                                            value={graphic.id!.toString()}
                                             key={graphic.id}
                                         >
                                             {graphic.slug}

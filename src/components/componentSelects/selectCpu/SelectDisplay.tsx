@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import { useFormState } from 'react-dom'
 import Link from 'next/link'
-
+import { toast } from 'sonner'
 import {
     Select,
     SelectTrigger,
@@ -15,27 +16,35 @@ import {
 import { ProductType } from '@/types/ProductType'
 import { editProduct } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
-import { getFilteredData } from '@/lib/fetcher'
+import { getFilteredData, mutateData } from '@/lib/fetcher'
 import { DisplayType } from '@/types/DisplayType'
 
 type Props = {
     product: ProductType
+    token: string
+    initialState: { message: string; success: boolean }
 }
-
-export default function SelectDisplay({ product }: Props) {
+export default function SelectDisplay({ product, token, initialState }: Props) {
     const [slug, setSlug] = useState('')
     const [isChange, setIsChange] = useState(false)
     const displayList: DisplayType[] = getFilteredData('Display')?.display_list
-    const cpu = displayList?.find((display) => display.slug === slug)
-    const formData: FormData = new FormData()
-    if (cpu) {
-        formData.append('display_id', cpu.id!)
-    }
+
     const editProductWithId = editProduct.bind(
         null,
         product?.id?.toString()!,
-        formData
+        token
     )
+    const [state, formAction] = useFormState(editProductWithId, initialState)
+
+    useEffect(() => {
+        if (state.message && !state.success) toast.error(state.message)
+        if (state.message && state.success) {
+            toast.success(state.message)
+            setSlug('')
+        }
+        mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
+    }, [state])
+
     return (
         <div className="mt-16 grid grid-cols-2 gap-8">
             <div>
@@ -57,8 +66,12 @@ export default function SelectDisplay({ product }: Props) {
                         Змінити
                     </Button>
                 ) : (
-                    <form action={editProductWithId}>
-                        <Select onValueChange={(value) => setSlug(value)}>
+                    <form action={formAction}>
+                        <Select
+                            name="display_id"
+                            value={slug}
+                            onValueChange={setSlug}
+                        >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Оберіть дисплей" />
                             </SelectTrigger>
@@ -67,7 +80,8 @@ export default function SelectDisplay({ product }: Props) {
                                     <SelectLabel>Дисплей</SelectLabel>
                                     {displayList?.map((display) => (
                                         <SelectItem
-                                            value={display?.slug!}
+                                            value={display?.id!.toString()}
+                                            defaultValue={''}
                                             key={display.id}
                                         >
                                             {display.slug}

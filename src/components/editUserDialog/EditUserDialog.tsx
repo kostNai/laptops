@@ -44,6 +44,7 @@ export default function EditUserDialog({
     const [state, formAction] = useFormState(updateUserWithId, initialState)
 
     useEffect(() => {
+        console.log(state)
         state.message && !state.success ? toast.error(state.message) : false
         state.success && toast.success(state.message)
         mutateData(`http://127.0.0.1:8000/api/users/${user.id}`)

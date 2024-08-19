@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import {
@@ -15,27 +15,35 @@ import {
 import { ProductType } from '@/types/ProductType'
 import { editProduct } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
-import { getFilteredData } from '@/lib/fetcher'
+import { getFilteredData, mutateData } from '@/lib/fetcher'
 import { RamType } from '@/types/RamType'
+import { useFormState } from 'react-dom'
+import { toast } from 'sonner'
 
 type Props = {
     product: ProductType
+    token: string
+    initialState: { message: string; success: boolean }
 }
 
-export default function SelectRam({ product }: Props) {
+export default function SelectRam({ product, token, initialState }: Props) {
     const [slug, setSlug] = useState('')
     const [isChange, setIsChange] = useState(false)
     const ramList: RamType[] = getFilteredData('Ram')?.ram_list
-    const ram = ramList?.find((ram) => ram.slug === slug)
-    const formData: FormData = new FormData()
-    if (ram) {
-        formData.append('ram_id', ram.id!)
-    }
     const editProductWithId = editProduct.bind(
         null,
         product?.id?.toString()!,
-        formData
+        token
     )
+    const [state, formAction] = useFormState(editProductWithId, initialState)
+    useEffect(() => {
+        if (state.message && !state.success) toast.error(state.message)
+        if (state.message && state.success) {
+            toast.success(state.message)
+            setSlug('')
+        }
+        mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
+    }, [state])
     return (
         <div className="mt-16 grid grid-cols-2 gap-8">
             <div>
@@ -60,8 +68,12 @@ export default function SelectRam({ product }: Props) {
                         Змінити
                     </Button>
                 ) : (
-                    <form action={editProductWithId}>
-                        <Select onValueChange={(value) => setSlug(value)}>
+                    <form action={formAction}>
+                        <Select
+                            onValueChange={setSlug}
+                            value={slug}
+                            name="ram_id"
+                        >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Оберіть ОЗУ" />
                             </SelectTrigger>
@@ -70,7 +82,7 @@ export default function SelectRam({ product }: Props) {
                                     <SelectLabel>Процесор</SelectLabel>
                                     {ramList?.map((ram) => (
                                         <SelectItem
-                                            value={ram.slug}
+                                            value={ram.id?.toString()!}
                                             key={ram.id}
                                         >
                                             {ram.slug}

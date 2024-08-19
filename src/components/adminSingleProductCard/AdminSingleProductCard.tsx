@@ -11,23 +11,18 @@ import SelectMemory from '../componentSelects/selectCpu/SelectMemory'
 import SelectRam from '../componentSelects/selectCpu/SelectRam'
 import SelectGraphic from '../componentSelects/selectCpu/SelectGraphic'
 import { FaSpinner } from 'react-icons/fa6'
+import { getProduct } from '@/lib/fetcher'
+import { useSession } from 'next-auth/react'
 
 type Props = {
     id: string
 }
-
+const initialState = { message: '', success: false }
 export default function AdminSingleProductCard({ id }: Props) {
-    const [product, setProduct] = useState<ProductType>()
+    const session = useSession()
+    const token = session.data?.user?.access_token
     const [isLoading, setIsLoading] = useState(false)
-
-    useEffect(() => {
-        const fetchProduct = async () => {
-            setIsLoading(true)
-            setProduct((await axios.get(`/api/product/?id=${id}`)).data.product)
-            setIsLoading(false)
-        }
-        fetchProduct()
-    }, [])
+    const product = getProduct(id)
     return product && !isLoading ? (
         <div className="w-full my-16 h-full">
             <div className=" bg-white mr-8 px-8 rounded-lg h-full ">
@@ -44,11 +39,31 @@ export default function AdminSingleProductCard({ id }: Props) {
                     />
                 </div>
                 <ProductBlockList product={product} />
-                <SelectCpu product={product} />
-                <SelectDisplay product={product} />
-                <SelectMemory product={product} />
-                <SelectRam product={product} />
-                <SelectGraphic product={product} />
+                <SelectCpu
+                    product={product}
+                    token={token!}
+                    initialState={initialState}
+                />
+                <SelectDisplay
+                    product={product}
+                    token={token!}
+                    initialState={initialState}
+                />
+                <SelectMemory
+                    product={product}
+                    token={token!}
+                    initialState={initialState}
+                />
+                <SelectRam
+                    product={product}
+                    token={token!}
+                    initialState={initialState}
+                />
+                <SelectGraphic
+                    product={product}
+                    token={token!}
+                    initialState={initialState}
+                />
             </div>
         </div>
     ) : (

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import {
@@ -17,25 +17,33 @@ import { ProductType } from '@/types/ProductType'
 import { editProduct } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
 import { getFilteredData, mutateData } from '@/lib/fetcher'
+import { useFormState } from 'react-dom'
+import { toast } from 'sonner'
 
 type Props = {
     product: ProductType
+    token: string
+    initialState: { message: string; success: boolean }
 }
 
-export default function SelectCpu({ product }: Props) {
+export default function SelectCpu({ product, token, initialState }: Props) {
     const [modelCpu, setModelCpu] = useState('')
     const [isChange, setIsChange] = useState(false)
     const cpuList: CpuType[] = getFilteredData('Cpu')?.cpu_list
-    const cpu = cpuList?.find((cpu) => cpu.model === modelCpu)
-    const formData: FormData = new FormData()
-    if (cpu) {
-        formData.append('cpu_id', cpu.id!)
-    }
     const editProductWithId = editProduct.bind(
         null,
         product?.id?.toString()!,
-        formData
+        token
     )
+    const [state, formAction] = useFormState(editProductWithId, initialState)
+    useEffect(() => {
+        if (state.message && !state.success) toast.error(state.message)
+        if (state.message && state.success) {
+            toast.success(state.message)
+            setModelCpu('')
+        }
+        mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
+    }, [state])
     return (
         <div className="mt-16 grid grid-cols-2 gap-8">
             <div>
@@ -57,8 +65,12 @@ export default function SelectCpu({ product }: Props) {
                         Змінити
                     </Button>
                 ) : (
-                    <form action={editProductWithId}>
-                        <Select onValueChange={(value) => setModelCpu(value)}>
+                    <form action={formAction}>
+                        <Select
+                            onValueChange={setModelCpu}
+                            value={modelCpu}
+                            name="cpu_id"
+                        >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Оберіть процесор" />
                             </SelectTrigger>
@@ -67,7 +79,8 @@ export default function SelectCpu({ product }: Props) {
                                     <SelectLabel>Процесор</SelectLabel>
                                     {cpuList?.map((cpu) => (
                                         <SelectItem
-                                            value={cpu.model}
+                                            value={cpu.id?.toString()!}
+                                            defaultValue={''}
                                             key={cpu.id}
                                         >
                                             {cpu.model}

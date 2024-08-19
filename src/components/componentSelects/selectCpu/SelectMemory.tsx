@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 
 import {
@@ -15,27 +15,35 @@ import {
 import { ProductType } from '@/types/ProductType'
 import { editProduct } from '@/lib/actions'
 import { Button } from '@/components/ui/button'
-import { getFilteredData } from '@/lib/fetcher'
+import { getFilteredData, mutateData } from '@/lib/fetcher'
 import { MemoryType } from '@/types/MemoryType'
+import { useFormState } from 'react-dom'
+import { toast } from 'sonner'
 
 type Props = {
     product: ProductType
+    token: string
+    initialState: { message: string; success: boolean }
 }
 
-export default function SelectMemory({ product }: Props) {
+export default function SelectMemory({ product, token, initialState }: Props) {
     const [isChange, setIsChange] = useState(false)
     const [slug, setSlug] = useState('')
     const memoryList: MemoryType[] = getFilteredData('Memory')?.memory_list
-    const memory = memoryList?.find((memory) => memory.slug === slug)
-    const formData: FormData = new FormData()
-    if (memory) {
-        formData.append('memory_id', memory.id!)
-    }
     const editProductWithId = editProduct.bind(
         null,
         product?.id?.toString()!,
-        formData
+        token
     )
+    const [state, formAction] = useFormState(editProductWithId, initialState)
+    useEffect(() => {
+        if (state.message && !state.success) toast.error(state.message)
+        if (state.message && state.success) {
+            toast.success(state.message)
+            setSlug('')
+        }
+        mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
+    }, [state])
     return (
         <div className="mt-16 grid grid-cols-2 gap-8">
             <div>
@@ -56,8 +64,12 @@ export default function SelectMemory({ product }: Props) {
                         Змінити
                     </Button>
                 ) : (
-                    <form action={editProductWithId}>
-                        <Select onValueChange={(value) => setSlug(value)}>
+                    <form action={formAction}>
+                        <Select
+                            onValueChange={setSlug}
+                            value={slug}
+                            name="memory_id"
+                        >
                             <SelectTrigger className="w-[180px]">
                                 <SelectValue placeholder="Оберіть пам'ять" />
                             </SelectTrigger>
@@ -66,7 +78,7 @@ export default function SelectMemory({ product }: Props) {
                                     <SelectLabel>Пам'ять</SelectLabel>
                                     {memoryList?.map((memory) => (
                                         <SelectItem
-                                            value={memory.slug}
+                                            value={memory.id!.toString()}
                                             key={memory.id}
                                         >
                                             {memory.slug}
