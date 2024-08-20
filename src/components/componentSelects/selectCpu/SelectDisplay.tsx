@@ -22,9 +22,15 @@ import { DisplayType } from '@/types/DisplayType'
 type Props = {
     product: ProductType
     token: string
-    initialState: { message: string; success: boolean }
+    initialState: { message: string; success: boolean; token: string }
+    updateSession: (token: string) => void
 }
-export default function SelectDisplay({ product, token, initialState }: Props) {
+export default function SelectDisplay({
+    product,
+    token,
+    initialState,
+    updateSession
+}: Props) {
     const [slug, setSlug] = useState('')
     const [isChange, setIsChange] = useState(false)
     const displayList: DisplayType[] = getFilteredData('Display')?.display_list
@@ -42,6 +48,7 @@ export default function SelectDisplay({ product, token, initialState }: Props) {
             toast.success(state.message)
             setSlug('')
         }
+        updateSession(state.token)
         mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
     }, [state])
 

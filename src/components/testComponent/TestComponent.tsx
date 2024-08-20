@@ -1,14 +1,16 @@
-import React from 'react'
-import useSWR from 'swr'
-import axios from 'axios'
+'use client'
 
-const fetcher = (url: string) => axios.get(url).then((res) => res.data)
+import { useSession } from 'next-auth/react'
+
 export default function TestComponent() {
-    const { data, error, isLoading } = useSWR(
-        'http://127.0.0.1:8000/api/get-filtered-data/?component=Cpu',
-        fetcher
-    )
+    const { data: session, status, update } = useSession()
+    const updateSessionData = async () => {
+        update({ access_token: '111' })
+    }
     return (
-        <div className="text-3xl font bold">Test Test Test Test Test Test</div>
+        <div>
+            <button onClick={updateSessionData}>Click</button>
+            <button onClick={() => console.log(session)}>Log session</button>
+        </div>
     )
 }

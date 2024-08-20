@@ -16,7 +16,13 @@ export default async function AdminLayout({
                     </Link>
                 </div>
                 <div className="h-full">
-                    <Suspense fallback={<div className='text-3xl font-bold absolute top-1/2 left-1/2'>Admin suspense</div>}>
+                    <Suspense
+                        fallback={
+                            <div className="text-3xl font-bold absolute top-1/2 left-1/2">
+                                Admin suspense
+                            </div>
+                        }
+                    >
                         <AdminNavBar />
                     </Suspense>
                 </div>

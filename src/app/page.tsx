@@ -1,3 +1,4 @@
+import TestComponent from '@/components/testComponent/TestComponent'
 import Image from 'next/image'
 import Link from 'next/link'
 
@@ -34,6 +35,7 @@ export default function Home() {
                 <div className="relative object-contain max-lg:w-2/3 h-[400px] w-full">
                     <Image src="/title-img.png" alt="" fill />
                 </div>
+                {/* <TestComponent /> */}
             </div>
         </section>
     )

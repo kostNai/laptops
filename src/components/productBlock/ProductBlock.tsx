@@ -8,6 +8,7 @@ type Props = {
     propName: string
     defaultValue: string
     value: string
+    updateSession: (token: string) => void
 }
 
 export default function ProductBlock({
@@ -16,7 +17,8 @@ export default function ProductBlock({
     propName,
     dialogTitle,
     defaultValue,
-    value
+    value,
+    updateSession
 }: Props) {
     return (
         <div className="mt-8 flex flex-col items-start border-b-[1px] border-gray-300 border-solid">
@@ -29,6 +31,7 @@ export default function ProductBlock({
                 propName={propName}
                 defaultValue={defaultValue}
                 product={product}
+                updateSession={updateSession}
             />
         </div>
     )

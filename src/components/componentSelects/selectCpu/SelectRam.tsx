@@ -23,10 +23,16 @@ import { toast } from 'sonner'
 type Props = {
     product: ProductType
     token: string
-    initialState: { message: string; success: boolean }
+    initialState: { message: string; success: boolean; token: string }
+    updateSession: (token: string) => void
 }
 
-export default function SelectRam({ product, token, initialState }: Props) {
+export default function SelectRam({
+    product,
+    token,
+    initialState,
+    updateSession
+}: Props) {
     const [slug, setSlug] = useState('')
     const [isChange, setIsChange] = useState(false)
     const ramList: RamType[] = getFilteredData('Ram')?.ram_list
@@ -42,6 +48,7 @@ export default function SelectRam({ product, token, initialState }: Props) {
             toast.success(state.message)
             setSlug('')
         }
+        updateSession(state.token)
         mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
     }, [state])
     return (

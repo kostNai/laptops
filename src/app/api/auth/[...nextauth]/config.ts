@@ -24,9 +24,6 @@ export const authConfig: AuthOptions = {
                 const user = await res.json()
 
                 if (res.ok && user) {
-                    // const access_token = user.access_token
-                    // const current_user = user.user
-                    // const res = { access_token, current_user }
                     return {
                         ...user,
                         access_token: user.access_token
@@ -60,7 +57,10 @@ export const authConfig: AuthOptions = {
             return session
         },
 
-        async jwt({ token, user, account, profile }) {
+        async jwt({ token, user, trigger, session }) {
+            if (trigger === 'update' && session.access_token) {
+                token.access_token = session.access_token
+            }
             if (user) {
                 token.id = user.user.id
                 token.username = user.user.username

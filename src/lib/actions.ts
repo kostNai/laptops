@@ -4,6 +4,23 @@ import { z } from 'zod'
 import axios from 'axios'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
+const refresh = async (token: string) => {
+    try {
+        const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/refresh`,
+            {},
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            }
+        )
+        return res.data.access_token
+    } catch (error: any) {
+        console.log(`error - ${error}`)
+    }
+}
+
 export const register = async (
     prevState: { message: string; path: string; success: boolean },
     formData: FormData
@@ -91,12 +108,11 @@ export const addProduct = async (
 export const editProduct = async (
     id: string,
     token: string,
-    prevState: { message: string; success: boolean },
+    prevState: { message: string; success: boolean; token: string },
     formData: FormData
 ) => {
     const data = Object.fromEntries(formData)
-    console.log(data)
-    formData.append('product_img', data.file)
+    formData.append('product_img', data.product_img)
     try {
         const res = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/products/${id}?_method=PATCH`,
@@ -107,9 +123,18 @@ export const editProduct = async (
                 }
             }
         )
-        return { message: 'Успішно змінено', success: true }
+        const refreshedToken: string = await refresh(token)
+        return {
+            message: 'Успішно змінено',
+            success: true,
+            token: refreshedToken
+        }
     } catch (error: any) {
-        return { message: error.response.data.message, success: false }
+        return {
+            message: error.response.data.message,
+            success: false,
+            token: ''
+        }
     }
 }
 
@@ -120,7 +145,6 @@ export const editUser = async (
     formData: FormData
 ) => {
     const data = Object.fromEntries(formData)
-    console.log(data)
     formData.append('user_img', data.user_img)
     try {
         const res = await axios.post(

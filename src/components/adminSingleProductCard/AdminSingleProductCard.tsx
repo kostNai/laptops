@@ -13,56 +13,70 @@ import SelectGraphic from '../componentSelects/selectCpu/SelectGraphic'
 import { FaSpinner } from 'react-icons/fa6'
 import { getProduct } from '@/lib/fetcher'
 import { useSession } from 'next-auth/react'
+import { Button } from '../ui/button'
+import { Label } from '../ui/label'
+import { Input } from '../ui/input'
+import { useFormState } from 'react-dom'
+import ProductImage from '../productImage/ProductImage'
 
 type Props = {
     id: string
 }
-const initialState = { message: '', success: false }
+const initialState = { message: '', success: false, token: '' }
 export default function AdminSingleProductCard({ id }: Props) {
-    const session = useSession()
-    const token = session.data?.user?.access_token
+    const { data: session, status, update } = useSession()
+    const updateSession = (access_token: string) => {
+        update({ access_token })
+    }
+    const token = session?.user?.access_token
     const [isLoading, setIsLoading] = useState(false)
     const product = getProduct(id)
+
     return product && !isLoading ? (
-        <div className="w-full my-16 h-full">
+        <div className="w-full my-16 h-full ">
+            <button onClick={() => console.log(session?.user?.access_token)}>
+                click
+            </button>
             <div className=" bg-white mr-8 px-8 rounded-lg h-full ">
-                <div className="w-fit h-fit mt-16  border-[1px] border-gray-300 border-solid p-4 rounded-xl inline-block ">
-                    <Image
-                        src={
-                            product.image
-                                ? product.image
-                                : '/test-card-image.png'
-                        }
-                        alt="product image"
-                        width={300}
-                        height={200}
-                    />
-                </div>
-                <ProductBlockList product={product} />
+                <ProductImage
+                    product={product}
+                    token={token!}
+                    initialState={initialState}
+                    updateSession={updateSession}
+                />
+                <ProductBlockList
+                    product={product}
+                    updateSession={updateSession}
+                />
                 <SelectCpu
                     product={product}
                     token={token!}
                     initialState={initialState}
+                    updateSession={updateSession}
                 />
                 <SelectDisplay
                     product={product}
                     token={token!}
                     initialState={initialState}
+                    updateSession={updateSession}
                 />
                 <SelectMemory
                     product={product}
                     token={token!}
                     initialState={initialState}
+                    updateSession={updateSession}
                 />
                 <SelectRam
                     product={product}
                     token={token!}
                     initialState={initialState}
+                    updateSession={updateSession}
                 />
                 <SelectGraphic
                     product={product}
                     token={token!}
                     initialState={initialState}
+                    updateSession={updateSession}
                 />
             </div>
         </div>

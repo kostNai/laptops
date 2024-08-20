@@ -27,14 +27,16 @@ type Props = {
     propName: string
     defaultValue: string
     product: ProductType
+    updateSession: (token: string) => void
 }
-const initialState = { message: '', success: false }
+const initialState = { message: '', success: false, token: '' }
 
 export default function EditProuctDialog({
     title,
     propName,
     defaultValue,
-    product
+    product,
+    updateSession
 }: Props) {
     const session = useSession()
     const token = session.data?.user?.access_token
@@ -48,6 +50,7 @@ export default function EditProuctDialog({
     useEffect(() => {
         if (!state.success && state.message) toast.error(state.message)
         if (state.success && state.message) toast.success(state.message)
+        updateSession(state.token)
         mutateData(`http://127.0.0.1:8000/api/products/${product.id}`)
     }, [state])
     return (
