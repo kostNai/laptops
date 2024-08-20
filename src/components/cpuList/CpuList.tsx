@@ -12,6 +12,7 @@ import { useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import { getFilteredData, revalidate } from '@/lib/fetcher'
 import ComponentDilog from '../componentDilog/ComponentDilog'
+import { refresh } from '@/lib/actions'
 
 type Props = {
     product: ProductType
@@ -34,9 +35,9 @@ export default function CpuList({ product, setProduct, id }: Props) {
     const [getMore, setGetMore] = useState<boolean>()
     const [defaultFields, setDefaultFields] = useState<CpuType[]>()
     const [isLoading, setIsLoading] = useState(true)
-    const session = useSession()
+    const { data: session, status, update } = useSession()
 
-    const token = session.data?.user?.access_token
+    const token = session?.user?.access_token
     const slug = `${newCpu?.model}_${newCpu?.series}_${newCpu?.cores_value}`
 
     useEffect(() => {
@@ -61,6 +62,8 @@ export default function CpuList({ product, setProduct, id }: Props) {
                 if (res.status === 200) {
                     toast.success('Додано успішно')
                     revalidate('Cpu')
+                    const refreshedToken = await refresh(token)
+                    update({ access_token: refreshedToken })
                 }
             } catch (error) {
                 console.log(error)

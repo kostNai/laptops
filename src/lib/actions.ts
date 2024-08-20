@@ -4,7 +4,7 @@ import { z } from 'zod'
 import axios from 'axios'
 import { revalidatePath, revalidateTag } from 'next/cache'
 
-const refresh = async (token: string) => {
+export const refresh = async (token: string) => {
     try {
         const res = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/refresh`,
@@ -81,7 +81,7 @@ export const register = async (
 
 export const addProduct = async (
     token: string,
-    prevState: { message: string; success: boolean },
+    prevState: { message: string; success: boolean; token: string },
     formData: FormData
 ) => {
     const data = Object.fromEntries(formData)
@@ -96,11 +96,17 @@ export const addProduct = async (
                 }
             }
         )
-        return { message: 'Успішно додано', success: true }
+        const refreshedToken: string = await refresh(token)
+        return {
+            message: 'Успішно додано',
+            success: true,
+            token: refreshedToken
+        }
     } catch (error: any) {
         return {
             message: error?.response?.data.message.toString(),
-            success: false
+            success: false,
+            token: ''
         }
     }
 }

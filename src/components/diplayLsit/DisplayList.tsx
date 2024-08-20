@@ -13,6 +13,7 @@ import { Button } from '../ui/button'
 import { toast } from 'sonner'
 import { getFilteredData, revalidate } from '@/lib/fetcher'
 import ComponentDilog from '../componentDilog/ComponentDilog'
+import { refresh } from '@/lib/actions'
 
 type Props = {
     product: ProductType
@@ -35,9 +36,9 @@ export default function DisplayList({ product, setProduct, id }: Props) {
     const [getMore, setGetMore] = useState<boolean>()
     const [defaultFields, setDefaultFields] = useState<DisplayType[]>()
     const [isLoading, setIsLoading] = useState(true)
-    const session = useSession()
+    const { data: session, status, update } = useSession()
 
-    const token = session.data?.user?.access_token
+    const token = session?.user?.access_token
     const slug = `${newDisplay?.matrix}_${newDisplay?.size}_${newDisplay?.resolution}_${newDisplay?.cover}`
 
     useEffect(() => {
@@ -65,6 +66,8 @@ export default function DisplayList({ product, setProduct, id }: Props) {
                     toast.success('Додано успішно')
                     revalidate('Display')
                     setOpen(false)
+                    const refreshedToken = await refresh(token)
+                    update({ access_token: refreshedToken })
                 }
             } catch (error) {
                 console.log(error)

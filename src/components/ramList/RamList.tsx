@@ -22,7 +22,7 @@ import { Button } from '../ui/button'
 import { FaPlus } from 'react-icons/fa6'
 import { Input } from '../ui/input'
 import { toast } from 'sonner'
-import { revalidateData } from '@/lib/actions'
+import { refresh, revalidateData } from '@/lib/actions'
 import { getFilteredData, revalidate } from '@/lib/fetcher'
 import ComponentDilog from '../componentDilog/ComponentDilog'
 
@@ -45,10 +45,9 @@ export default function RamList({ product, setProduct, id }: Props) {
     const [getMore, setGetMore] = useState<boolean>()
     const [defaultFields, setDefaultFields] = useState<RamType[]>()
     const [isLoading, setIsLoading] = useState(true)
-    const session = useSession()
-    const pathName = usePathname()
+    const { data: session, status, update } = useSession()
 
-    const token = session.data?.user?.access_token
+    const token = session?.user?.access_token
     const slug = `${newRam?.manufacturer}_${newRam?.type}_${newRam?.memory}`
 
     useEffect(() => {
@@ -76,6 +75,8 @@ export default function RamList({ product, setProduct, id }: Props) {
                     toast.success('Додано успішно')
                     revalidate('Ram')
                     setOpen(false)
+                    const refreshedToken = await refresh(token)
+                    update({ access_token: refreshedToken })
                 }
             } catch (error) {
                 console.log(error)

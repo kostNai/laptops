@@ -1,5 +1,5 @@
 import axios from 'axios'
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 
 export async function GET() {
     const products = (await axios.get('http://127.0.0.1:8000/api/products'))

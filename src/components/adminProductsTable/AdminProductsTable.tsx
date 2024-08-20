@@ -8,41 +8,56 @@ import { jwtDecode } from 'jwt-decode'
 import { toast } from 'sonner'
 import { ProductType } from '@/types/ProductType'
 import { deleteProduct } from '@/lib/data'
-import { revalidateData } from '@/lib/actions'
+import { refresh, revalidateData } from '@/lib/actions'
 import CustomAlertDilog from '@/components/alertDilog/CustomAlertDilog'
+import axios from 'axios'
+import TestComponent from '../testComponent/TestComponent'
 type Props = {
     products: ProductType[]
 }
 
 export default function AdminProductsTable({ products }: Props) {
-    const session = useSession()
+    const { data: session, status, update } = useSession()
     const [isChangeProduct, setIsChangeProduct] = useState<boolean | undefined>(
         false
     )
     const router = useRouter()
     const pathName = usePathname()
 
-    const token = session.data?.user?.access_token
+    const token = session?.user?.access_token
     const decoded = jwtDecode(token!)
     const isTokenExp = new Date(0).setUTCSeconds(decoded.exp!) - Date.now()
 
-    const deleteProductHandler = async (productId: string) => {
+    const deleteProductHandler = async (id: string) => {
         if (token) {
             if (isTokenExp <= 0) {
                 toast.error('Помилка авторизації! Увійдіть в акаунт')
                 signOut()
                 router.push('/login')
             }
-            const res = await deleteProduct(productId, token)
-            if (res.status === 200) {
-                toast.success('Успішно видалено')
-                revalidateData('/admin/products')
-                setIsChangeProduct(false)
+            if (token) {
+                try {
+                    console.log('test')
+                    const res = await axios.delete(
+                        'http://localhost:3000/api/product',
+                        {
+                            data: { id, token }
+                        }
+                    )
+                    const refreshedToken = await refresh(token)
+                    update({ access_token: refreshedToken })
+                    revalidateData('/admin/products')
+                    toast.success('Успішно видалено')
+                    setIsChangeProduct(false)
+                } catch (error: any) {
+                    toast.error(error.message)
+                }
             }
         }
     }
     return (
         <div className="mt-16 px-8">
+            <TestComponent />
             <table className="w-full table-fixed">
                 <thead className="bg-body-bg ">
                     <tr>
