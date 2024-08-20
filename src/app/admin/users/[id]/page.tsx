@@ -1,4 +1,5 @@
 import AdminSingleUserCard from '@/components/adminSingleUserCard/AdminSingleUserCard'
+import TestComponent from '@/components/testComponent/TestComponent'
 import React from 'react'
 
 export default async function SingleUserPage({
@@ -8,6 +9,7 @@ export default async function SingleUserPage({
 }) {
     return (
         <div>
+            <TestComponent />
             <AdminSingleUserCard id={params.id} />
         </div>
     )

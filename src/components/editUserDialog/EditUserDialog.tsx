@@ -12,7 +12,7 @@ import {
     AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
-import { editUser } from '@/lib/actions'
+import { editUser, refresh } from '@/lib/actions'
 import { Label } from '../ui/label'
 import { Input } from '../ui/input'
 import { UserType } from '@/types'
@@ -29,7 +29,7 @@ type Props = {
     user: UserType
 }
 
-const initialState = { message: '', success: false }
+const initialState = { message: '', success: false, token: '' }
 
 export default function EditUserDialog({
     title,
@@ -37,16 +37,16 @@ export default function EditUserDialog({
     defaultValue,
     user
 }: Props) {
-    const session = useSession()
-    const token = session.data?.user?.access_token
+    const { data: session, status, update } = useSession()
+    const token = session?.user?.access_token
     const updateUserWithId = editUser.bind(null, user.id?.toString()!, token!)
 
     const [state, formAction] = useFormState(updateUserWithId, initialState)
 
     useEffect(() => {
-        console.log(state)
         state.message && !state.success ? toast.error(state.message) : false
         state.success && toast.success(state.message)
+        update({ access_token: state.token })
         mutateData(`http://127.0.0.1:8000/api/users/${user.id}`)
     }, [state])
 
