@@ -10,7 +10,9 @@ export default function TestComponent() {
     return (
         <div>
             <button onClick={updateSessionData}>Click</button>
-            <button onClick={() => console.log(session)}>Log session</button>
+            <button onClick={() => console.log(session?.user?.access_token)}>
+                Log session
+            </button>
         </div>
     )
 }

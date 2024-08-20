@@ -147,7 +147,7 @@ export const editProduct = async (
 export const editUser = async (
     id: string,
     token: string,
-    prevState: { message: string; success: boolean },
+    prevState: { message: string; success: boolean; token: string },
     formData: FormData
 ) => {
     const data = Object.fromEntries(formData)
@@ -162,11 +162,17 @@ export const editUser = async (
                 }
             }
         )
-        return { message: 'Успішно оновлено', success: true }
+        const refreshedToken = await refresh(token)
+        return {
+            message: 'Успішно оновлено',
+            success: true,
+            token: refreshedToken
+        }
     } catch (error: any) {
         return {
             message: error?.response?.data.message.toString(),
-            success: false
+            success: false,
+            token: ''
         }
     }
 }

@@ -14,7 +14,7 @@ import { Button } from '../ui/button'
 import { useRouter, usePathname } from 'next/navigation'
 import axios from 'axios'
 import { toast } from 'sonner'
-import { revalidateData } from '@/lib/actions'
+import { refresh, revalidateData } from '@/lib/actions'
 import { useSession } from 'next-auth/react'
 
 type Props = {
@@ -24,8 +24,8 @@ type Props = {
 export default function AdminUserTable({ users }: Props) {
     const router = useRouter()
     const pathName = usePathname()
-    const session = useSession()
-    const token = session?.data?.user?.access_token
+    const { data: session, status, update } = useSession()
+    const token = session?.user?.access_token
 
     const onDeleteHandler = async (id: string) => {
         try {
@@ -38,6 +38,8 @@ export default function AdminUserTable({ users }: Props) {
                 )
                 console.log(res)
             }
+            const refreshedToken = await refresh(token!)
+            update({ access_token: refreshedToken })
             revalidateData(pathName)
             toast.success('Видалено успішно')
         } catch (error: any) {
