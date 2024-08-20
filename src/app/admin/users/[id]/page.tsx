@@ -9,7 +9,6 @@ export default async function SingleUserPage({
 }) {
     return (
         <div>
-            <TestComponent />
             <AdminSingleUserCard id={params.id} />
         </div>
     )

@@ -151,6 +151,11 @@ export const editUser = async (
     formData: FormData
 ) => {
     const data = Object.fromEntries(formData)
+    if (data.hasOwnProperty('is_admin')) {
+        data.is_admin === 'true'
+            ? formData.append('user', JSON.stringify({ is_admin: Number(1) }))
+            : formData.append('user', JSON.stringify({ is_admin: Number(0) }))
+    }
     formData.append('user_img', data.user_img)
     try {
         const res = await axios.post(

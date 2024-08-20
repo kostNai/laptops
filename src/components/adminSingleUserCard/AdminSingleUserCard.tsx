@@ -1,15 +1,15 @@
 'use client'
 
 import Image from 'next/image'
-import React from 'react'
+import React, { useState } from 'react'
 import { FaUser } from 'react-icons/fa'
 import { Button } from '../ui/button'
 import EditUserDialog from '../editUserDialog/EditUserDialog'
 import { getUser } from '@/lib/fetcher'
 import { UserType } from '@/types'
-import { Select } from '../ui/select'
-import { Input } from '../ui/input'
 import FileDialog from '../fileDialog/FileDialog'
+import { Select } from '../ui/select'
+import EditUserRole from '../editUserRole/EditUserRole'
 
 type Props = {
     id: string
@@ -17,6 +17,7 @@ type Props = {
 
 export default function AdminSingleUserCard({ id }: Props) {
     const user: UserType = getUser(id)?.user
+    const [isAdmin, setIsAdmin] = useState<boolean | undefined>(false)
 
     return (
         user && (
@@ -99,6 +100,11 @@ export default function AdminSingleUserCard({ id }: Props) {
                         user={user!}
                     />
                 </div>
+                <EditUserRole
+                    isAdmin={isAdmin!}
+                    setIsAdmin={setIsAdmin}
+                    user={user}
+                />
             </div>
         )
     )
