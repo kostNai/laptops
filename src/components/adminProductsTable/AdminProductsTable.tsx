@@ -56,9 +56,8 @@ export default function AdminProductsTable({ products }: Props) {
         }
     }
     return (
-        <div className="mt-16 px-8">
-            <TestComponent />
-            <table className="w-full table-fixed">
+        <div className="mt-16 px-8 overflow-x-auto">
+            <table className="w-full max-xl:w-[1280px]">
                 <thead className="bg-body-bg ">
                     <tr>
                         <th className="text-center py-1">Назва продукту</th>

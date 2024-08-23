@@ -11,7 +11,7 @@ export default async function UsersPage() {
     ).data.users
 
     return (
-        <div>
+        <div className="overflow-auto">
             <Suspense
                 fallback={
                     <div className="absolute top-1/2 left-1/2 ">

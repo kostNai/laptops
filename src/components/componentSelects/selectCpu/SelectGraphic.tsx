@@ -52,21 +52,19 @@ export default function SelectGraphic({
         mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
     }, [state])
     return (
-        <div className="mt-16 grid grid-cols-2 gap-8">
+        <div className="mt-16 grid grid-cols-2 gap-8 max-sm:flex max-sm:flex-col max-sm:items-start max-sm:ml-2">
             <div>
                 <h3 className="text-2xl font-bold">Графіка:</h3>
                 <div>
-                    <div>
-                        <div className="flex gap-2">
-                            <p>{product.graphic?.manufacturer}</p>
-                            <p>{product.graphic?.model}</p>
-                            <p>{product.graphic?.series}</p>
-                            <p>{product.graphic?.type}</p>
-                        </div>
+                    <div className="flex gap-2 max-sm:flex-col max-sm:gap-0">
+                        <p>{product.graphic?.manufacturer}</p>
+                        <p>{product.graphic?.model}</p>
+                        <p>{product.graphic?.series}</p>
+                        <p>{product.graphic?.type}</p>
                     </div>
                 </div>
             </div>
-            <div className="flex gap-16 items-center">
+            <div className="flex gap-16 items-center max-sm:px-2 max-sm:gap-4 max-sm:items-start">
                 {!isChange ? (
                     <Button variant="primary" onClick={() => setIsChange(true)}>
                         Змінити

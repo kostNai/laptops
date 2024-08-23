@@ -33,11 +33,8 @@ export default function AdminSingleProductCard({ id }: Props) {
     const product = getProduct(id)
 
     return product && !isLoading ? (
-        <div className="w-full my-16 h-full ">
-            <button onClick={() => console.log(session?.user?.access_token)}>
-                click
-            </button>
-            <div className=" bg-white mr-8 px-8 rounded-lg h-full ">
+        <div className="w-full my-16 h-full max-sm:my-2">
+            <div className=" bg-white mr-8 px-8 rounded-lg h-full max-sm:mr-0 max-sm:px-0">
                 <ProductImage
                     product={product}
                     token={token!}

@@ -48,7 +48,7 @@ export default function FileDialog({
     }, [state])
 
     return (
-        <div>
+        <div className="max-sm:ml-4">
             <AlertDialog>
                 <AlertDialogTrigger asChild>
                     <Button

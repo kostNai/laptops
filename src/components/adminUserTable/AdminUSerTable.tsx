@@ -48,7 +48,6 @@ export default function AdminUserTable({ users }: Props) {
     }
     return (
         <Table className="mt-32 ">
-            <TableCaption>A list of your recent invoices.</TableCaption>
             <TableHeader className="sticky top-0 bg-gray-700 opacity-100">
                 <TableRow className=" [&>*:nth-child(n)]:text-center [&>th]:text-white ">
                     <TableHead className="w-[100px]">№</TableHead>

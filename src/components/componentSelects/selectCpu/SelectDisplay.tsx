@@ -53,21 +53,20 @@ export default function SelectDisplay({
     }, [state])
 
     return (
-        <div className="mt-16 grid grid-cols-2 gap-8">
+        <div className="mt-16 grid grid-cols-2 gap-8 max-sm:flex max-sm:flex-col max-sm:items-start max-sm:ml-2">
             <div>
                 <h3 className="text-2xl font-bold">Дисплей:</h3>
+
                 <div>
-                    <div>
-                        <div className="flex gap-2">
-                            <p>{product.display?.cover}</p>
-                            <p>{product.display?.matrix}</p>
-                            <p>{product.display?.resolution}px</p>
-                            <p>{product.display?.size}"</p>
-                        </div>
+                    <div className="flex gap-2 max-sm:flex-col max-sm:gap-0">
+                        <p>{product.display?.cover}</p>
+                        <p>{product.display?.matrix}</p>
+                        <p>{product.display?.resolution}px</p>
+                        <p>{product.display?.size}"</p>
                     </div>
                 </div>
             </div>
-            <div className="flex gap-16 items-center">
+            <div className="flex gap-16 items-center max-sm:px-2 max-sm:gap-4 max-sm:items-start">
                 {!isChange ? (
                     <Button variant="primary" onClick={() => setIsChange(true)}>
                         Змінити

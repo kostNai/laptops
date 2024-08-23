@@ -52,21 +52,19 @@ export default function SelectCpu({
         mutateData(`${process.env.NEXT_PUBLIC_API_URL}/products/${product.id}`)
     }, [state])
     return (
-        <div className="mt-16 grid grid-cols-2 gap-8">
+        <div className="mt-16 grid grid-cols-2 gap-8 max-sm:flex max-sm:flex-col max-sm:items-start max-sm:ml-2">
             <div>
                 <h3 className="text-2xl font-bold">Процесор:</h3>
                 <div>
-                    <div>
-                        <div className="flex gap-2">
-                            <p>{product.cpu?.manufacturer}</p>
-                            <p>{product.cpu?.model}</p>
-                        </div>
-                        <p>Кількість ядер - {product.cpu?.cores_value}</p>
-                        <p>Частота - {product.cpu?.frequency}GHz</p>
+                    <div className="flex gap-2 max-sm:flex-col max-sm:gap-0">
+                        <p>{product.cpu?.manufacturer}</p>
+                        <p>{product.cpu?.model}</p>
                     </div>
+                    <p>Кількість ядер - {product.cpu?.cores_value}</p>
+                    <p>Частота - {product.cpu?.frequency}GHz</p>
                 </div>
             </div>
-            <div className="flex gap-16 items-center">
+            <div className="flex gap-16 items-center max-sm:px-2 max-sm:gap-4 max-sm:items-start">
                 {!isChange ? (
                     <Button variant="primary" onClick={() => setIsChange(true)}>
                         Змінити

@@ -21,17 +21,12 @@ export default function AdminSingleUserCard({ id }: Props) {
 
     return (
         user && (
-            <div className="mt-32">
-                <div className="mb-16 ">
+            <div className="mt-32 max-sm:mt-8">
+                <div className="mb-16 max-sm:mb-0">
                     {user?.img ? (
                         <div>
-                            <div className="border-[1px] border-solid border-gray-300 rounded-xl w-fit p-4">
-                                <Image
-                                    src={user.img}
-                                    width={200}
-                                    height={300}
-                                    alt="user image"
-                                />
+                            <div className="relative  w-[300px] h-[200px]  max-sm:relative max-sm:w-full max-sm:h-[200px]">
+                                <Image src={user.img} fill alt="user image" />
                             </div>
                             <FileDialog
                                 title={'Фото профілю'}
@@ -43,7 +38,7 @@ export default function AdminSingleUserCard({ id }: Props) {
                         </div>
                     ) : (
                         <div>
-                            <div className="border-[1px] border-solid border-gray-300 rounded-xl w-fit p-4">
+                            <div className="border-[1px] border-solid border-gray-300 rounded-xl w-fit p-4 max-sm:relative max-sm:w-full max-sm:h-[200px]">
                                 <FaUser size={200} color="gray" />
                             </div>
                             <FileDialog
@@ -61,50 +56,52 @@ export default function AdminSingleUserCard({ id }: Props) {
                         </div>
                     )}
                 </div>
-                {user?.name ? (
+                <div className="max-sm:ml-4">
+                    {user?.name ? (
+                        <div className="flex gap-8 items-center">
+                            <p>Ім'я - {user?.name}</p>
+                            <EditUserDialog
+                                title={"Ім'я"}
+                                propName={'name'}
+                                defaultValue={user.name}
+                                user={user}
+                            />
+                        </div>
+                    ) : (
+                        <div className="flex gap-8 items-center">
+                            <p>Ім'я відсутнє</p>
+                            <EditUserDialog
+                                title={"Ім'я"}
+                                propName={'name'}
+                                defaultValue={user?.name!}
+                                user={user!}
+                            />
+                        </div>
+                    )}
                     <div className="flex gap-8 items-center">
-                        <p>Ім'я - {user?.name}</p>
+                        <p>Логін - {user?.username}</p>
                         <EditUserDialog
-                            title={"Ім'я"}
-                            propName={'name'}
-                            defaultValue={user.name}
-                            user={user}
-                        />
-                    </div>
-                ) : (
-                    <div className="flex gap-8 items-center">
-                        <p>Ім'я відсутнє</p>
-                        <EditUserDialog
-                            title={"Ім'я"}
-                            propName={'name'}
-                            defaultValue={user?.name!}
+                            title={'Логін'}
+                            propName={'username'}
+                            defaultValue={user?.username!}
                             user={user!}
                         />
                     </div>
-                )}
-                <div className="flex gap-8 items-center">
-                    <p>Логін - {user?.username}</p>
-                    <EditUserDialog
-                        title={'Логін'}
-                        propName={'username'}
-                        defaultValue={user?.username!}
-                        user={user!}
+                    <div className="flex gap-8 items-center">
+                        <p>Email - {user?.email}</p>
+                        <EditUserDialog
+                            title={'Email'}
+                            propName={'email'}
+                            defaultValue={user?.email!}
+                            user={user!}
+                        />
+                    </div>
+                    <EditUserRole
+                        isAdmin={isAdmin!}
+                        setIsAdmin={setIsAdmin}
+                        user={user}
                     />
                 </div>
-                <div className="flex gap-8 items-center">
-                    <p>Email - {user?.email}</p>
-                    <EditUserDialog
-                        title={'Email'}
-                        propName={'email'}
-                        defaultValue={user?.email!}
-                        user={user!}
-                    />
-                </div>
-                <EditUserRole
-                    isAdmin={isAdmin!}
-                    setIsAdmin={setIsAdmin}
-                    user={user}
-                />
             </div>
         )
     )

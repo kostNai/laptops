@@ -56,7 +56,7 @@ export default function ProductImage({
             {!isImageChange && (
                 <Button
                     variant="outline"
-                    className="mb-8"
+                    className="mb-8 max-sm:w-full"
                     onClick={() => setIsImageChange(true)}
                 >
                     Змінити зображення
@@ -69,12 +69,12 @@ export default function ProductImage({
                 >
                     <Label
                         htmlFor="product_img"
-                        className="flex flex-col gap-1 text-lg"
+                        className="flex flex-col gap-1 text-lg max-sm:items-center max-sm:w-full"
                     >
                         Змінити
                     </Label>
                     <Input name="product_img" type="file" ref={fileRef} />
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 max-sm:justify-center  max-sm:w-full">
                         <Button
                             variant="success"
                             type="submit"

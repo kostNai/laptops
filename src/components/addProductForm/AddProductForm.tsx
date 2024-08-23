@@ -10,7 +10,6 @@ import { Label } from '../ui/label'
 import { addProduct } from '@/lib/actions'
 import { ProductType } from '@/types/ProductType'
 import { useFormState } from 'react-dom'
-import TestComponent from '../testComponent/TestComponent'
 
 const productFields = [
     {
@@ -92,25 +91,24 @@ export default function AddProductForm() {
 
     return (
         <div>
-            <TestComponent />
             <form
                 action={formAction}
-                className="mt-16 mx-8 bg-white rounded-xl p-2 "
+                className="mt-16 mx-8 bg-white rounded-xl p-2 max-lg:flex max-lg:flex-col max-lg:items-center"
                 ref={formRef}
             >
                 <h2 className="text-2xl font-bold">Новий продукт</h2>
-                <div className="p-2 mt-8 flex gap-4 flex-wrap items-start">
+                <div className="p-2 mt-8 flex gap-4 flex-wrap items-start max-lg:justify-center">
                     {productFields.map((productField, indx) => (
                         <label
                             htmlFor={productField.name}
                             key={productField.field}
+                            className="max-sm:w-full"
                         >
                             {productField.field}
                             <Input
                                 type="text"
                                 name={productField.name}
                                 placeholder={productField.field}
-                                // onChange={onChangeHandler}
                                 ref={(el) => {
                                     refs.current[indx] = el!
                                 }}

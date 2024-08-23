@@ -21,7 +21,7 @@ export default function ProductBlock({
     updateSession
 }: Props) {
     return (
-        <div className="mt-8 flex flex-col items-start border-b-[1px] border-gray-300 border-solid">
+        <div className="mt-8 flex flex-col items-start border-b-[1px] border-gray-300 border-solid max-sm:items-center">
             <p>
                 <span className="opacity-60">{title} - </span>
                 {value}

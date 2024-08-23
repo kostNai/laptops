@@ -20,7 +20,7 @@ type Props = {
 // ]
 export default function ProductBlockList({ product, updateSession }: Props) {
     return (
-        <div>
+        <div className="max-sm:flex max-sm:flex-col max0sm:items:center">
             <ProductBlock
                 product={product}
                 title="Назва"
