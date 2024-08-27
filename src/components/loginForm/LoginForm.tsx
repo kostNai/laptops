@@ -71,7 +71,6 @@ export default function LoginForm() {
                     />
                 </div>
                 <button
-                    // type="submit"
                     onClick={onSubmitHandler}
                     className="bg-header-bg text-white py-4 rounded-lg"
                 >

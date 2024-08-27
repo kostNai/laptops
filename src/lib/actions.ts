@@ -156,7 +156,7 @@ export const editUser = async (
             ? formData.append('user', JSON.stringify({ is_admin: Number(1) }))
             : formData.append('user', JSON.stringify({ is_admin: Number(0) }))
     }
-    formData.append('user_img', data.user_img)
+    formData.append('user_img', data.img)
     try {
         const res = await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/users/${id}?_method=PATCH`,
@@ -179,6 +179,64 @@ export const editUser = async (
             success: false,
             token: ''
         }
+    }
+}
+
+export const addUser = async (
+    token: string,
+    prevState: {
+        message: string
+        success: boolean
+        token: string
+        statusCode: number
+        path: string
+    },
+    formData: FormData
+) => {
+    const data = Object.fromEntries(formData)
+    const User = z
+        .object({
+            username: z.string().min(1, { message: "Це поле є обов'язковим" }),
+            email: z.string().min(1, { message: "Це поле є обов'язковим" }),
+            password: z.string().min(1, { message: "Це поле є обов'язковим" })
+        })
+        .safeParse({
+            username: data.username,
+            email: data.email,
+            password: data.password
+        })
+
+    try {
+        const res = await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/register`,
+            {
+                ...data
+            }
+        )
+    } catch (error: any) {
+        return User.success
+            ? {
+                  message: error.response.data.message.toString(),
+                  success: false,
+                  token: '',
+                  statusCode: 413,
+                  path: ''
+              }
+            : {
+                  message: User!.error!.errors[0].message,
+                  success: false,
+                  token: '',
+                  statusCode: 413,
+                  path: User!.error!.issues[0].path[0].toString()
+              }
+    }
+    const refreshedToken: string = await refresh(token)
+    return {
+        message: 'Успішно додано',
+        success: true,
+        token: refreshedToken,
+        statusCode: 200,
+        path: ''
     }
 }
 
