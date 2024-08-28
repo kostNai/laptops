@@ -43,7 +43,7 @@ export default function AddUserForm() {
     }, [state])
     return (
         <form action={formAction} className="w-full mt-8">
-            <div className="w-1/3 flex flex-col gap-4 ">
+            <div className="w-1/3 flex flex-col gap-4 max-lg:w-1/2 max-md:w-full">
                 <div className="flex flex-col gap-6 [&>*:nth-child(n)]:flex [&>*:nth-child(n)]:flex-col [&>*:nth-child(n)]:gap-2">
                     <Label>
                         Ім'я
