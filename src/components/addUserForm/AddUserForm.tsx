@@ -6,7 +6,7 @@ import { Input } from '../ui/input'
 import { Label } from '../ui/label'
 import { useFormState } from 'react-dom'
 import { addUser } from '@/lib/actions'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { mutateData } from '@/lib/fetcher'
 import { redirect } from 'next/navigation'
@@ -23,6 +23,8 @@ export default function AddUserForm() {
     const { data: session, status, update } = useSession()
     const token = session?.user?.access_token
 
+    const [disable, setDisable] = useState(false)
+
     const addUserWithToken = addUser.bind(null, token!)
 
     const [state, formAction] = useFormState(addUserWithToken, initialState)
@@ -31,7 +33,6 @@ export default function AddUserForm() {
         update({ access_token })
     }
     useEffect(() => {
-        console.log(state)
         state.message && !state.success ? toast.error(state.message) : false
         state.success && toast.success(state.message)
         updateSession(state.token)
@@ -41,6 +42,7 @@ export default function AddUserForm() {
             redirect('/login')
         }
     }, [state])
+
     return (
         <form action={formAction} className="w-full mt-8">
             <div className="w-1/3 flex flex-col gap-4 max-lg:w-1/2 max-md:w-full">
@@ -102,7 +104,12 @@ export default function AddUserForm() {
                     </Label>
                 </div>
                 <div className="flex w-full gap-4">
-                    <Button variant="success" type="submit" className="w-full">
+                    <Button
+                        variant="success"
+                        type="submit"
+                        className="w-full"
+                        disabled={disable}
+                    >
                         Додати
                     </Button>
                     <Button
